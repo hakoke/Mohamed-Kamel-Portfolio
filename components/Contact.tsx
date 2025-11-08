@@ -17,7 +17,7 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: implement email sending or form submission
-    const mailtoLink = `mailto:your.email@example.com?subject=Portfolio Contact from ${formData.name}&body=${formData.message}`;
+    const mailtoLink = `mailto:mykamel.cs@gmail.com?subject=Portfolio Contact from ${formData.name}&body=${formData.message}`;
     window.location.href = mailtoLink;
   };
 
@@ -50,7 +50,7 @@ export default function Contact() {
                 </a>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail size={24} />
-                  <span>your.email@example.com</span>
+                  <span>mykamel.cs@gmail.com</span>
                 </div>
               </div>
             </div>
