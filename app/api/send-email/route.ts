@@ -45,8 +45,28 @@ export async function POST(request: Request) {
     console.log('Calling resend.emails.send()...');
     const data = await resend.emails.send(emailPayload);
 
+    console.log('Response received from Resend:');
+    console.log('Full response:', JSON.stringify(data, null, 2));
+    
+    // Check if Resend returned an error (it doesn't always throw)
+    if (data.error) {
+      console.error('❌ Resend returned an error!');
+      console.error('Error name:', data.error.name);
+      console.error('Error message:', data.error.message);
+      console.error('Full error:', JSON.stringify(data.error, null, 2));
+      
+      return NextResponse.json(
+        { 
+          error: 'Resend API error', 
+          details: data.error.message,
+          errorName: data.error.name
+        },
+        { status: 400 }
+      );
+    }
+    
     console.log('✅ SUCCESS! Email sent');
-    console.log('Response data:', JSON.stringify(data, null, 2));
+    console.log('Email ID:', data.data?.id);
     
     return NextResponse.json({ success: true, data });
   } catch (error: any) {

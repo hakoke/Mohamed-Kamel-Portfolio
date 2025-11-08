@@ -33,14 +33,24 @@ export default function Contact() {
       console.log('Response status:', response.status);
       const data = await response.json();
       console.log('Response data:', data);
+      
+      // Check if there's an error in the response
+      if (data.error || data.details) {
+        setStatus('error');
+        console.error('❌ Failed to send email');
+        console.error('Error details:', data.details || data.error);
+        console.error('Error name:', data.errorName);
+        alert(`Failed to send: ${data.details || data.error}`);
+        return;
+      }
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
         console.log('✅ Email sent successfully!');
       } else {
         setStatus('error');
-        console.error('❌ Failed to send email:', data);
+        console.error('❌ Unexpected response:', data);
       }
     } catch (error) {
       setStatus('error');
