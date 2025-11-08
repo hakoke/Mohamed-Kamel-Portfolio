@@ -14,11 +14,32 @@ export default function Contact() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: implement email sending or form submission
-    const mailtoLink = `mailto:mykamel.cs@gmail.com?subject=Portfolio Contact from ${formData.name}&body=${formData.message}`;
-    window.location.href = mailtoLink;
+    setSending(true);
+    setStatus('idle');
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -92,11 +113,18 @@ export default function Contact() {
                   required
                 />
               </div>
+              {status === 'success' && (
+                <p className="text-green-400 text-center">Message sent successfully! 🎉</p>
+              )}
+              {status === 'error' && (
+                <p className="text-red-400 text-center">Failed to send. Please try again.</p>
+              )}
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors flex items-center justify-center gap-2"
+                disabled={sending}
+                className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                Send Message
+                {sending ? 'Sending...' : 'Send Message'}
                 <Send size={20} />
               </button>
             </form>
