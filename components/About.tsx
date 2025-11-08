@@ -39,13 +39,13 @@ export default function About() {
 
           <div className="mb-16 max-w-3xl mx-auto">
             <p className="text-lg text-gray-400 mb-4">
-              I'm a developer who loves building things that live on the internet.
+              I&apos;m a developer who loves building things that live on the internet.
               My interest in development started back when I wanted to create my own games
               and applications.
             </p>
             <p className="text-lg text-gray-400">
               These days, I focus on creating interactive experiences with JavaScript/TypeScript
-              and exploring the possibilities of AI. When I'm not coding, you can find me
+              and exploring the possibilities of AI. When I&apos;m not coding, you can find me
               working on game projects or training machine learning models.
             </p>
           </div>
