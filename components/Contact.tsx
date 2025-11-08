@@ -1,0 +1,113 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { Mail, Github, Send } from "lucide-react";
+
+export default function Contact() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: implement email sending or form submission
+    const mailtoLink = `mailto:your.email@example.com?subject=Portfolio Contact from ${formData.name}&body=${formData.message}`;
+    window.location.href = mailtoLink;
+  };
+
+  return (
+    <section id="contact" className="py-20 px-4 bg-white/[0.02]" ref={ref}>
+      <div className="max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-4xl font-bold mb-12 text-center">Get In Touch</h2>
+
+          <div className="grid md:grid-cols-2 gap-12">
+            <div>
+              <p className="text-lg text-gray-400 mb-8">
+                I'm always open to new opportunities and collaborations. Feel free
+                to reach out if you want to work together or just chat about tech!
+              </p>
+
+              <div className="space-y-4">
+                <a
+                  href="https://github.com/hakoke"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+                >
+                  <Github size={24} />
+                  <span>github.com/hakoke</span>
+                </a>
+                <div className="flex items-center gap-3 text-gray-400">
+                  <Mail size={24} />
+                  <span>your.email@example.com</span>
+                </div>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+                  required
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Your Message"
+                  value={formData.message}
+                  onChange={(e) =>
+                    setFormData({ ...formData, message: e.target.value })
+                  }
+                  rows={5}
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors flex items-center justify-center gap-2"
+              >
+                Send Message
+                <Send size={20} />
+              </button>
+            </form>
+          </div>
+
+          <div className="mt-16 text-center text-gray-500">
+            <p>&copy; 2025 Mohamed Kamel. Built with Next.js</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
