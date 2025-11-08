@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     const emailPayload = {
       from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: 'mykamel.cs@gmail.com',
+      to: 'ynkk46i2@gmail.com',
       replyTo: email,
       subject: `Portfolio Contact from ${name}`,
       html: `

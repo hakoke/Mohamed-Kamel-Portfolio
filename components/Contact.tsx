@@ -89,7 +89,7 @@ export default function Contact() {
                 </a>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail size={24} />
-                  <span>mykamel.cs@gmail.com</span>
+                  <span>ynkk46i2@gmail.com</span>
                 </div>
               </div>
             </div>
