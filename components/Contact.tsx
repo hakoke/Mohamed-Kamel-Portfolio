@@ -23,20 +23,28 @@ export default function Contact() {
     setStatus('idle');
 
     try {
+      console.log('Submitting form:', formData);
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Response data:', data);
+
       if (response.ok) {
         setStatus('success');
         setFormData({ name: '', email: '', message: '' });
+        console.log('✅ Email sent successfully!');
       } else {
         setStatus('error');
+        console.error('❌ Failed to send email:', data);
       }
     } catch (error) {
       setStatus('error');
+      console.error('❌ Network error:', error);
     } finally {
       setSending(false);
     }
