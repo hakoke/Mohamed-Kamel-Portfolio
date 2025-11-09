@@ -74,7 +74,7 @@ export default function Contact() {
             <div>
               <p className="text-lg text-gray-400 mb-8">
                 I&apos;m always open to new opportunities and collaborations. Feel free
-                to reach out if you want to work together or just chat about tech!
+                to reachh out if you want to work together or just chat about tech!
               </p>
 
               <div className="space-y-4">
