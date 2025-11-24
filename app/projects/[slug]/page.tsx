@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Github, ExternalLink, Code, Image as ImageIcon, Play, Zap, Cpu, Cloud, Video, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProjectPage() {
   const params = useParams();
@@ -12,6 +12,7 @@ export default function ProjectPage() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
   // Project data mapping
   const projects: Record<string, any> = {
@@ -21,7 +22,7 @@ export default function ProjectPage() {
       github: "https://github.com/hakoke/Dashboard_AI",
       gradient: "from-blue-500 via-cyan-500 to-teal-500",
       gradientLight: "from-blue-500/20 via-cyan-500/20 to-teal-500/20",
-      image: "🤖",
+      image: "/SafeOps.jpg",
       overview: "SafeOps is a production-ready AI monitoring system designed for warehouse safety. The system uses computer vision to detect safety violations in real-time, track employee attendance through facial recognition, and automatically alert security personnel when violations occur. Built to handle multiple camera feeds simultaneously, SafeOps processes video streams continuously to ensure workplace safety compliance. The attendance system automatically tracks when employees enter the warehouse (first detection time) and records exit time when they're gone from all cameras for more than 5 minutes.",
       features: [
         "Real-time PPE detection using YOLOv8 (helmets, vests, gloves, boots)",
@@ -70,7 +71,7 @@ export default function ProjectPage() {
         ai: "AWS (GPU instances for model inference)",
         web: "Railway (frontend, backend, and MongoDB database)"
       },
-      demoVideo: "/placeholder-demo-video.mp4",
+      demoVideo: "/SafeOps_Video.mp4",
       challenges: [
         "Optimized real-time video processing to handle multiple camera feeds simultaneously without performance degradation",
         "Implemented cross-camera person tracking using ReID embeddings to maintain identity across different camera views",
@@ -391,6 +392,30 @@ function processTurn(player, action) {
 
   const project = projects[slug];
 
+  // Preload all images for smooth transitions
+  useEffect(() => {
+    if (project?.images && project.images.length > 0) {
+      const imagePromises = project.images.map((img: any) => {
+        return new Promise((resolve, reject) => {
+          const imageElement = new window.Image();
+          imageElement.onload = resolve;
+          imageElement.onerror = reject;
+          imageElement.src = img.url;
+        });
+      });
+      
+      Promise.all(imagePromises)
+        .then(() => {
+          setImagesLoaded(true);
+        })
+        .catch(() => {
+          setImagesLoaded(true); // Still set to true to show images even if some fail
+        });
+    } else {
+      setImagesLoaded(true);
+    }
+  }, [project]);
+
   if (!project) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-purple-900/20 to-[#0a0a0a] flex items-center justify-center px-4">
@@ -495,13 +520,25 @@ function processTurn(player, action) {
                 </h2>
               </div>
               <div className="relative aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/20 group cursor-pointer" onClick={() => setIsVideoOpen(true)}>
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+                {/* Video Preview Thumbnail */}
+                {project.demoVideo && (
+                  <video
+                    src={project.demoVideo}
+                    className="w-full h-full object-cover"
+                    muted
+                    playsInline
+                    preload="metadata"
+                  />
+                )}
+                
+                {/* Play Button Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-all">
                   <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all shadow-lg">
                       <Play size={40} className="text-white ml-1" />
                     </div>
-                    <p className="text-white text-lg font-semibold">Click to watch full demo</p>
-                    <p className="text-white/60 text-sm mt-2">See SafeOps in action</p>
+                    <p className="text-white text-lg font-semibold drop-shadow-lg">Click to watch demo</p>
+                    <p className="text-white/80 text-sm mt-2 drop-shadow">See SafeOps in action</p>
                   </div>
                 </div>
               </div>
@@ -595,22 +632,44 @@ function processTurn(player, action) {
               {/* Image Carousel */}
               <div className="relative">
                 <div className="relative aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/20 mb-4">
-                  <img
-                    src={project.images[currentImageIndex].url}
-                    alt={project.images[currentImageIndex].alt}
-                    className="w-full h-full object-contain"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = `data:image/svg+xml,${encodeURIComponent(`
-                        <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
-                          <rect width="800" height="600" fill="#1a1a1a"/>
-                          <text x="400" y="300" font-family="Arial" font-size="24" fill="#666" text-anchor="middle">
-                            ${project.images[currentImageIndex].title}
-                          </text>
-                        </svg>
-                      `)}`;
-                    }}
-                  />
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentImageIndex}
+                      src={project.images[currentImageIndex].url}
+                      alt={project.images[currentImageIndex].alt}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.05 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="w-full h-full object-contain absolute inset-0"
+                      loading="eager"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `data:image/svg+xml,${encodeURIComponent(`
+                          <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="800" height="600" fill="#1a1a1a"/>
+                            <text x="400" y="300" font-family="Arial" font-size="24" fill="#666" text-anchor="middle">
+                              ${project.images[currentImageIndex].title}
+                            </text>
+                          </svg>
+                        `)}`;
+                      }}
+                    />
+                  </AnimatePresence>
+                  
+                  {/* Preload next/previous images */}
+                  {project.images.map((img: any, idx: number) => {
+                    const isNearby = Math.abs(idx - currentImageIndex) <= 1;
+                    return isNearby && idx !== currentImageIndex ? (
+                      <img
+                        key={`preload-${idx}`}
+                        src={img.url}
+                        alt=""
+                        className="hidden"
+                        loading="eager"
+                      />
+                    ) : null;
+                  })}
                   
                   {/* Navigation Buttons */}
                   {project.images.length > 1 && (
@@ -851,30 +910,40 @@ function processTurn(player, action) {
 
       {/* Video Modal */}
       {isVideoOpen && project.demoVideo && (
-        <div 
-          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4"
           onClick={() => setIsVideoOpen(false)}
         >
-          <div 
-            className="relative w-full max-w-6xl aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/20"
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full max-w-6xl aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setIsVideoOpen(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/80 hover:bg-black rounded-full flex items-center justify-center text-white transition-colors"
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/80 hover:bg-red-500/80 rounded-full flex items-center justify-center text-white transition-colors shadow-lg backdrop-blur-sm"
+              aria-label="Close video"
             >
-              <span className="text-2xl">×</span>
+              <span className="text-2xl font-bold">×</span>
             </button>
             <video
               src={project.demoVideo}
               controls
               autoPlay
+              playsInline
+              controlsList="nodownload"
               className="w-full h-full"
+              style={{ maxHeight: '90vh', objectFit: 'contain' }}
             >
               Your browser does not support the video tag.
             </video>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
