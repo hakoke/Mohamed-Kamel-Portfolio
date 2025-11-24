@@ -11,6 +11,7 @@ export default function ProjectPage() {
   const slug = params.slug as string;
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
 
   // Project data mapping
   const projects: Record<string, any> = {
@@ -103,69 +104,126 @@ export default function ProjectPage() {
         {
           language: "python",
           title: "PPE Detection with YOLOv8",
-          code: `def detect_ppe(frame, model):
-    """Detect PPE violations in a video frame using YOLOv8 model."""
-    results = model(frame, conf=0.5)
-    violations = []
+          description: "Custom YOLOv8 model for PPE detection with real-time frame processing, configurable confidence thresholds, and violation classification mapping.",
+          highlights: [
+            "Custom YOLOv8 model for PPE detection (helmets, vests, gloves, boots)",
+            "Real-time frame processing with configurable confidence thresholds",
+            "Violation classification mapping (no_helmet → helmet violation)",
+            "Bounding box extraction and confidence scoring"
+          ],
+          code: `# Load models
+try:
+    print("[SERVICE] Loading PPE detection model...")
+    if not Path(ppe_model_path).exists():
+        raise FileNotFoundError(f"PPE model not found: {ppe_model_path}")
+    self.ppe_model = YOLO(ppe_model_path)
+    print(f"[SERVICE] ✅ PPE model loaded: {ppe_model_path}")
+except Exception as e:
+    print(f"[ERROR] Failed to load PPE model: {e}")
+    raise
+
+# Run PPE detection
+ppe_results = self.ppe_model(frame, conf=self.conf_threshold, verbose=False)[0]
+
+# Process violations
+for idx, box in enumerate(ppe_results.boxes):
+    class_id = int(box.cls[0].item())
+    class_name = ppe_results.names.get(class_id, f"class_{class_id}")
+    confidence = float(box.conf[0].item())
+    bbox = box.xyxy[0].cpu().numpy()
     
-    for detection in results:
-        if detection.class not in REQUIRED_PPE:
-            violations.append({
-                'type': 'missing_ppe',
-                'item': detection.class,
-                'confidence': detection.conf,
-                'bbox': detection.bbox
-            })
-    
-    return violations`,
+    violation_type = self._map_ppe_class_to_violation_type(class_name)
+    if violation_type != 'unknown':
+        print(f"[SERVICE] Violation detected: {violation_type} (class: {class_name}, conf: {confidence:.2f})")`,
         },
         {
           language: "python",
           title: "Employee Recognition with ArcFace",
-          code: `def recognize_employee(face_image, arcface_model, db):
-    """Recognize employee using ArcFace embeddings."""
-    embedding = arcface_model.get_embedding(face_image)
+          description: "ArcFace model initialization with GPU/CPU fallback, cosine similarity matching against employee embeddings, and persistent identity mapping via track IDs.",
+          highlights: [
+            "ArcFace model initialization with GPU/CPU fallback",
+            "Cosine similarity matching against employee embeddings",
+            "Persistent identity mapping via track IDs",
+            "Threshold-based recognition with configurable sensitivity"
+          ],
+          code: `# Initialize face recognition
+if enable_face_recognition:
+    print("[SERVICE] Loading ArcFace model...")
+    import onnxruntime as ort
+    providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if 'CUDAExecutionProvider' in ort.get_available_providers() else ['CPUExecutionProvider']
+    print(f"[SERVICE] ArcFace using providers: {providers}")
+    self.face_app = FaceAnalysis(providers=providers)
+    self.face_app.prepare(ctx_id=0, det_size=(640, 640))
+    print("[SERVICE] ✅ ArcFace model loaded")
+    self._load_employee_embeddings()
+
+# Recognize face
+def _recognize_face(self, person_crop: np.ndarray) -> tuple:
+    faces = self.face_app.get(person_crop)
+    if not faces:
+        return None, 0.0
     
-    # Compare with stored embeddings in MongoDB
-    employees = db.employees.find({})
-    best_match = None
-    best_score = 0.0
+    query_embedding = faces[0].embedding
+    best_match_id = None
+    best_similarity = 0.0
     
-    for employee in employees:
-        similarity = cosine_similarity(
-            embedding, 
-            employee['face_embedding']
+    for emp_id, db_embedding in self.employee_embeddings.items():
+        similarity = np.dot(query_embedding, db_embedding) / (
+            np.linalg.norm(query_embedding) * np.linalg.norm(db_embedding) + 1e-8
         )
-        if similarity > best_score and similarity > THRESHOLD:
-            best_score = similarity
-            best_match = employee
+        if similarity > best_similarity:
+            best_similarity = similarity
+            best_match_id = emp_id
     
-    return best_match['employee_id'] if best_match else None`,
+    if best_similarity >= self.face_threshold:
+        return best_match_id, best_similarity
+    return None, best_similarity`,
         },
         {
           language: "python",
           title: "Multi-Camera Tracking with ByteTrack and ReID",
-          code: `def track_person_across_cameras(frame, camera_id, tracker, reid_model):
-    """Track person across multiple camera feeds."""
-    # ByteTrack for single camera tracking
-    tracks = tracker.update(frame)
+          description: "ByteTrack integration for persistent IDs within a camera, ReID for cross-camera tracking using appearance features, with real-time visualization of track IDs and global ReID IDs.",
+          highlights: [
+            "ByteTrack provides frame-to-frame tracking within a single camera",
+            "ReID enables cross-camera tracking by matching appearance embeddings",
+            "Real-time visualization of track IDs and global ReID IDs",
+            "Camera-specific track ID mapping for multi-camera environments"
+          ],
+          code: `# Initialize ReID
+if enable_reid:
+    print("[SERVICE] Initializing ReID tracker...")
+    import torch
+    reid_device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f"[SERVICE] ReID using device: {reid_device}")
+    reid_model = PersonReIDModel(device=reid_device)
+    self.reid_tracker = ReIDTracker(reid_model, similarity_threshold=0.6)
+    print("[SERVICE] ✅ ReID tracker initialized")
+
+# Run person detection with tracking
+if self.enable_tracking:
+    person_results = self.person_model.track(
+        frame,
+        conf=self.conf_threshold,
+        verbose=False,
+        persist=True
+    )[0]
     
-    # Extract ReID features for cross-camera matching
-    for track in tracks:
-        person_crop = extract_person_crop(frame, track.bbox)
-        reid_features = reid_model.extract_features(person_crop)
+    # Apply ReID if enabled
+    if self.enable_reid and self.reid_tracker:
+        track_ids = person_results.boxes.id.int().tolist()
+        camera_id_int = hash(camera_id) if camera_id else 0
         
-        # Match with tracks from other cameras
-        matched_track = match_across_cameras(
-            reid_features, 
-            camera_id,
-            global_track_pool
-        )
-        
-        if matched_track:
-            update_global_track(matched_track, track)
-    
-    return tracks`,
+        for idx, box in enumerate(person_results.boxes.xyxy):
+            if idx < len(track_ids):
+                track_id = track_ids[idx]
+                x1, y1, x2, y2 = map(int, box[:4])
+                person_crop = frame[y1:y2, x1:x2]
+                bbox = np.array([x1, y1, x2, y2])
+                
+                if person_crop.size > 0:
+                    global_id, confidence = self.reid_tracker.update(
+                        camera_id_int, track_id, person_crop, bbox
+                    )`,
         },
       ],
     },
@@ -374,7 +432,19 @@ function processTurn(player, action) {
             
             <div className="relative bg-gradient-to-br from-white/10 to-white/5 rounded-3xl p-8 md:p-12 border border-white/20 backdrop-blur-xl">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
-                <span className="text-7xl md:text-8xl">{project.image}</span>
+                {project.image && project.image.startsWith('/') ? (
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-32 h-32 md:w-40 md:h-40 object-contain rounded-xl"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <span className="text-7xl md:text-8xl">{project.image}</span>
+                )}
                 <div className="flex-1">
                   <h1 className={`text-5xl md:text-7xl font-bold mb-3 bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}>
                     {project.title}
@@ -383,26 +453,6 @@ function processTurn(player, action) {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${project.gradient} hover:opacity-90 rounded-lg transition-all transform hover:scale-105 font-semibold`}
-                >
-                  <Github size={20} />
-                  View on GitHub
-                </a>
-                {project.demoVideo && (
-                  <button 
-                    onClick={() => setIsVideoOpen(true)}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg transition-all border border-white/20"
-                  >
-                    <Video size={20} />
-                    Watch Demo
-                  </button>
-                )}
-              </div>
             </div>
           </motion.div>
         </div>
@@ -611,12 +661,13 @@ function processTurn(player, action) {
             </motion.div>
           )}
 
-          {/* Code Snippets */}
-          {project.codeSnippets && (
+          {/* Code Snippets Carousel */}
+          {project.codeSnippets && project.codeSnippets.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.55 }}
+              className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 border border-white/20 backdrop-blur-xl"
             >
               <div className="flex items-center gap-3 mb-6">
                 <Code className={`text-transparent bg-gradient-to-r ${project.gradient} bg-clip-text`} size={32} />
@@ -624,26 +675,93 @@ function processTurn(player, action) {
                   Code Highlights
                 </h2>
               </div>
-              <div className="space-y-6">
-                {project.codeSnippets.map((snippet: any, idx: number) => (
+
+              {/* Code Carousel */}
+              <div className="relative">
+                <div className="relative bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden border-2 border-white/20 mb-4">
                   <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -20 }}
+                    key={currentCodeIndex}
+                    initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.6 + idx * 0.1 }}
-                    className="bg-gradient-to-br from-gray-900 to-black rounded-xl p-6 border border-white/10 overflow-hidden"
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold text-white">{snippet.title}</h3>
-                      <span className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-300">
-                        {snippet.language}
-                      </span>
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl font-semibold text-white">{project.codeSnippets[currentCodeIndex].title}</h3>
+                        <span className="px-3 py-1 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-300">
+                          {project.codeSnippets[currentCodeIndex].language}
+                        </span>
+                      </div>
+                      <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto border border-white/5">
+                        <code className="text-green-400 font-mono text-sm leading-relaxed">{project.codeSnippets[currentCodeIndex].code}</code>
+                      </pre>
                     </div>
-                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto border border-white/5">
-                      <code className="text-green-400 font-mono text-sm">{snippet.code}</code>
-                    </pre>
                   </motion.div>
-                ))}
+                  
+                  {/* Navigation Buttons */}
+                  {project.codeSnippets.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentCodeIndex((prev) => (prev === 0 ? project.codeSnippets.length - 1 : prev - 1))}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center text-white transition-all transform hover:scale-110"
+                      >
+                        <ChevronLeft size={24} />
+                      </button>
+                      <button
+                        onClick={() => setCurrentCodeIndex((prev) => (prev === project.codeSnippets.length - 1 ? 0 : prev + 1))}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/90 rounded-full flex items-center justify-center text-white transition-all transform hover:scale-110"
+                      >
+                        <ChevronRight size={24} />
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                {/* Code Description */}
+                {project.codeSnippets[currentCodeIndex].description && (
+                  <motion.div
+                    key={`desc-${currentCodeIndex}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-white/5 rounded-lg p-6 border border-white/10 mb-4"
+                  >
+                    <p className="text-gray-300 leading-relaxed mb-4">
+                      {project.codeSnippets[currentCodeIndex].description}
+                    </p>
+                    {project.codeSnippets[currentCodeIndex].highlights && (
+                      <div className="space-y-2">
+                        <h4 className="text-white font-semibold mb-2">Key Highlights:</h4>
+                        <ul className="space-y-1">
+                          {project.codeSnippets[currentCodeIndex].highlights.map((highlight: string, idx: number) => (
+                            <li key={idx} className="text-gray-400 text-sm flex items-start gap-2">
+                              <span className="text-cyan-400 mt-1">•</span>
+                              <span>{highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+
+                {/* Code Indicators */}
+                {project.codeSnippets.length > 1 && (
+                  <div className="flex justify-center gap-2">
+                    {project.codeSnippets.map((_: any, idx: number) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentCodeIndex(idx)}
+                        className={`w-3 h-3 rounded-full transition-all ${
+                          idx === currentCodeIndex
+                            ? `bg-gradient-to-r ${project.gradient} scale-125`
+                            : 'bg-white/30 hover:bg-white/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
@@ -679,32 +797,6 @@ function processTurn(player, action) {
             </motion.div>
           )}
 
-          {/* Tech Stack */}
-          {project.tech && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
-              className="bg-gradient-to-br from-white/10 to-white/5 rounded-2xl p-8 border border-white/20 backdrop-blur-xl"
-            >
-              <h2 className={`text-4xl font-bold mb-6 bg-gradient-to-r ${project.gradient} bg-clip-text text-transparent`}>
-                Technology Stack
-              </h2>
-              <div className="flex flex-wrap gap-3">
-                {project.tech.map((tech: string, idx: number) => (
-                  <motion.span
-                    key={tech}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 1 + idx * 0.05 }}
-                    className={`px-5 py-2.5 bg-gradient-to-r ${project.gradientLight} border border-white/20 rounded-full text-sm font-semibold hover:scale-110 transition-transform cursor-default`}
-                  >
-                    {tech}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-          )}
 
           {/* Challenges */}
           {project.challenges && (
