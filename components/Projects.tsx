@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { ExternalLink, Github, ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function Projects() {
       github: "https://github.com/hakoke/Dashboard_AI",
       gradient: "from-blue-500/30 via-cyan-500/30 to-teal-500/30",
       featured: true,
-      image: "🤖",
+      image: "/SafeOps.png",
     },
     {
       title: "Bespoke",
@@ -53,6 +53,17 @@ export default function Projects() {
       image: "🎲",
     },
   ];
+
+  // Preload project logos/images
+  useEffect(() => {
+    const allProjects = [...featuredProjects, ...additionalProjects];
+    allProjects.forEach((project) => {
+      if (project.image && project.image.startsWith('/')) {
+        const img = new window.Image();
+        img.src = project.image;
+      }
+    });
+  }, []);
 
   return (
     <section id="projects" className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent relative overflow-hidden" ref={ref}>
@@ -102,7 +113,24 @@ export default function Projects() {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {project.image && (
-                            <span className="text-3xl">{project.image}</span>
+                            project.image.startsWith('/') ? (
+                              <div className={`w-12 h-12 flex items-center justify-center rounded-lg overflow-hidden ${project.title === "SafeOps PPE Detection" ? 'bg-gradient-to-br from-blue-500/10 to-cyan-500/10' : 'bg-transparent'}`}>
+                                <img 
+                                  src={project.image} 
+                                  alt={project.title}
+                                  className="max-w-full max-h-full object-contain"
+                                  style={{ 
+                                    filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.3))'
+                                  }}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-3xl">{project.image}</span>
+                            )
                           )}
                           <h3 className="text-2xl font-bold group-hover:text-blue-400 transition-colors">
                             {project.title}
@@ -159,7 +187,23 @@ export default function Projects() {
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-2">
                           {project.image && (
-                            <span className="text-2xl">{project.image}</span>
+                            project.image.startsWith('/') ? (
+                              <img 
+                                src={project.image} 
+                                alt={project.title}
+                                className="w-10 h-10 object-contain"
+                                style={{ 
+                                  mixBlendMode: 'multiply',
+                                  filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.1))'
+                                }}
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <span className="text-2xl">{project.image}</span>
+                            )
                           )}
                           <h4 className="text-xl font-semibold group-hover:text-blue-400 transition-colors">
                             {project.title}

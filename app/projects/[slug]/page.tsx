@@ -9,10 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function ProjectPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentCodeIndex, setCurrentCodeIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // Project data mapping
   const projects: Record<string, any> = {
@@ -22,7 +22,7 @@ export default function ProjectPage() {
       github: "https://github.com/hakoke/Dashboard_AI",
       gradient: "from-blue-500 via-cyan-500 to-teal-500",
       gradientLight: "from-blue-500/20 via-cyan-500/20 to-teal-500/20",
-      image: "/SafeOps.jpg",
+      image: "/SafeOps.png",
       overview: "SafeOps is a production-ready AI monitoring system designed for warehouse safety. The system uses computer vision to detect safety violations in real-time, track employee attendance through facial recognition, and automatically alert security personnel when violations occur. Built to handle multiple camera feeds simultaneously, SafeOps processes video streams continuously to ensure workplace safety compliance. The attendance system automatically tracks when employees enter the warehouse (first detection time) and records exit time when they're gone from all cameras for more than 5 minutes.",
       features: [
         "Real-time PPE detection using YOLOv8 (helmets, vests, gloves, boots)",
@@ -123,7 +123,7 @@ try:
     if not Path(ppe_model_path).exists():
         raise FileNotFoundError(f"PPE model not found: {ppe_model_path}")
     self.ppe_model = YOLO(ppe_model_path)
-    print(f"[SERVICE] ✅ PPE model loaded: {ppe_model_path}")
+    print(f"[SERVICE] PPE model loaded: {ppe_model_path}")
 except Exception as e:
     print(f"[ERROR] Failed to load PPE model: {e}")
     raise
@@ -160,7 +160,7 @@ if enable_face_recognition:
     print(f"[SERVICE] ArcFace using providers: {providers}")
     self.face_app = FaceAnalysis(providers=providers)
     self.face_app.prepare(ctx_id=0, det_size=(640, 640))
-    print("[SERVICE] ✅ ArcFace model loaded")
+    print("[SERVICE] ArcFace model loaded")
     self._load_employee_embeddings()
 
 # Recognize face
@@ -204,7 +204,7 @@ if enable_reid:
     print(f"[SERVICE] ReID using device: {reid_device}")
     reid_model = PersonReIDModel(device=reid_device)
     self.reid_tracker = ReIDTracker(reid_model, similarity_threshold=0.6)
-    print("[SERVICE] ✅ ReID tracker initialized")
+    print("[SERVICE] ReID tracker initialized")
 
 # Run person detection with tracking
 if self.enable_tracking:
@@ -394,25 +394,46 @@ function processTurn(player, action) {
 
   // Preload all images for smooth transitions
   useEffect(() => {
-    if (project?.images && project.images.length > 0) {
-      const imagePromises = project.images.map((img: any) => {
-        return new Promise((resolve, reject) => {
-          const imageElement = new window.Image();
-          imageElement.onload = resolve;
-          imageElement.onerror = reject;
-          imageElement.src = img.url;
-        });
-      });
+    if (project) {
+      const imagePromises: Promise<any>[] = [];
       
-      Promise.all(imagePromises)
-        .then(() => {
-          setImagesLoaded(true);
-        })
-        .catch(() => {
-          setImagesLoaded(true); // Still set to true to show images even if some fail
+      // Preload project logo if it's an image path
+      if (project.image && project.image.startsWith('/')) {
+        imagePromises.push(
+          new Promise((resolve, reject) => {
+            const imageElement = new window.Image();
+            imageElement.onload = resolve;
+            imageElement.onerror = reject;
+            imageElement.src = project.image;
+          })
+        );
+      }
+      
+      // Preload carousel images
+      if (project.images && project.images.length > 0) {
+        project.images.forEach((img: any) => {
+          imagePromises.push(
+            new Promise((resolve, reject) => {
+              const imageElement = new window.Image();
+              imageElement.onload = resolve;
+              imageElement.onerror = reject;
+              imageElement.src = img.url;
+            })
+          );
         });
-    } else {
-      setImagesLoaded(true);
+      }
+      
+      if (imagePromises.length > 0) {
+        Promise.all(imagePromises)
+          .then(() => {
+            setImagesLoaded(true);
+          })
+          .catch(() => {
+            setImagesLoaded(true); // Still set to true to show images even if some fail
+          });
+      } else {
+        setImagesLoaded(true);
+      }
     }
   }, [project]);
 
@@ -519,28 +540,42 @@ function processTurn(player, action) {
                   Live Demo
                 </h2>
               </div>
-              <div className="relative aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/20 group cursor-pointer" onClick={() => setIsVideoOpen(true)}>
-                {/* Video Preview Thumbnail */}
-                {project.demoVideo && (
+              <div className="relative aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/20">
+                {!isVideoPlaying ? (
+                  <div className="relative w-full h-full cursor-pointer group" onClick={() => setIsVideoPlaying(true)}>
+                    {/* Video Preview Thumbnail */}
+                    <video
+                      src={project.demoVideo}
+                      className="w-full h-full object-cover"
+                      muted
+                      playsInline
+                      preload="metadata"
+                    />
+                    
+                    {/* Play Button Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-all">
+                      <div className="text-center">
+                        <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all shadow-lg">
+                          <Play size={40} className="text-white ml-1" />
+                        </div>
+                        <p className="text-white text-lg font-semibold drop-shadow-lg">Click to play</p>
+                        <p className="text-white/80 text-sm mt-2 drop-shadow">See SafeOps in action</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
                   <video
                     src={project.demoVideo}
-                    className="w-full h-full object-cover"
-                    muted
+                    controls
+                    autoPlay
                     playsInline
-                    preload="metadata"
-                  />
+                    controlsList="nodownload"
+                    className="w-full h-full"
+                    onEnded={() => setIsVideoPlaying(false)}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
                 )}
-                
-                {/* Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-all">
-                  <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all shadow-lg">
-                      <Play size={40} className="text-white ml-1" />
-                    </div>
-                    <p className="text-white text-lg font-semibold drop-shadow-lg">Click to watch demo</p>
-                    <p className="text-white/80 text-sm mt-2 drop-shadow">See SafeOps in action</p>
-                  </div>
-                </div>
               </div>
             </motion.div>
           )}
@@ -908,43 +943,6 @@ function processTurn(player, action) {
         </div>
       </div>
 
-      {/* Video Modal */}
-      {isVideoOpen && project.demoVideo && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4"
-          onClick={() => setIsVideoOpen(false)}
-        >
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            className="relative w-full max-w-6xl aspect-video bg-black rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setIsVideoOpen(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/80 hover:bg-red-500/80 rounded-full flex items-center justify-center text-white transition-colors shadow-lg backdrop-blur-sm"
-              aria-label="Close video"
-            >
-              <span className="text-2xl font-bold">×</span>
-            </button>
-            <video
-              src={project.demoVideo}
-              controls
-              autoPlay
-              playsInline
-              controlsList="nodownload"
-              className="w-full h-full"
-              style={{ maxHeight: '90vh', objectFit: 'contain' }}
-            >
-              Your browser does not support the video tag.
-            </video>
-          </motion.div>
-        </motion.div>
-      )}
     </div>
   );
 }
