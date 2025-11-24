@@ -68,7 +68,9 @@ export default function Contact() {
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold mb-12 text-center">Get In Touch</h2>
+          <h2 className="text-5xl md:text-6xl font-bold mb-12 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            Get In Touch
+          </h2>
 
           <div className="grid md:grid-cols-2 gap-12">
             <div>
@@ -140,7 +142,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={sending}
-                className="w-full px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-all flex items-center justify-center gap-2 font-semibold transform hover:scale-105 shadow-lg shadow-purple-500/50"
               >
                 {sending ? 'Sending...' : 'Send Message'}
                 <Send size={20} />

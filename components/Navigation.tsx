@@ -31,8 +31,8 @@ export default function Navigation() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <a href="#home" className="text-2xl font-bold">
-            MK<span className="text-blue-500">.</span>
+          <a href="#home" className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            MK<span className="text-cyan-400">.</span>
           </a>
 
           {/* desktop nav */}
@@ -41,7 +41,7 @@ export default function Navigation() {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-gray-300 hover:text-white transition-colors"
+                className="text-gray-300 hover:text-transparent hover:bg-gradient-to-r hover:from-pink-500 hover:to-cyan-500 hover:bg-clip-text transition-all font-medium"
               >
                 {link.name}
               </a>

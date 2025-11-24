@@ -18,7 +18,7 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] relative">
+    <main className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-purple-900/10 to-[#0a0a0a] relative">
       <Navigation />
       <Hero />
       <About />

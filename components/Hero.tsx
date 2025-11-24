@@ -18,13 +18,11 @@ export default function Hero() {
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
             Hi, I&apos;m <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">Mohamed Kamel</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8">
-            Full-Stack Developer & AI Enthusiast
+          <p className="text-lg text-gray-300 mb-6 max-w-2xl mx-auto leading-relaxed">
+            I like taking on new projects, figuring things out as I go, and building real, usable solutions.
           </p>
-          <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
-            I specialize in building modern web applications, integrating AI/ML solutions, 
-            and creating real-time interactive experiences. Passionate about computer vision, 
-            full-stack development, and turning complex problems into elegant solutions.
+          <p className="text-lg text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+            I&apos;m especially interested in AI, computer vision, and full stack development.
           </p>
 
           <div className="flex gap-4 justify-center mb-12">
@@ -32,21 +30,21 @@ export default function Hero() {
               href="https://github.com/hakoke"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-4 bg-gradient-to-br from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 rounded-lg transition-all border border-purple-500/30 hover:border-purple-500/50 transform hover:scale-110"
             >
-              <Github size={24} />
+              <Github size={24} className="text-purple-300" />
             </a>
             <a
               href="#contact"
-              className="p-3 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              className="p-4 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 rounded-lg transition-all border border-cyan-500/30 hover:border-cyan-500/50 transform hover:scale-110"
             >
-              <Mail size={24} />
+              <Mail size={24} className="text-cyan-300" />
             </a>
           </div>
 
           <a
             href="#about"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 hover:opacity-90 rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg shadow-pink-500/50"
           >
             Learn More
             <ArrowDown size={20} />
@@ -56,9 +54,10 @@ export default function Hero() {
 
       {/* background effects */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-3/4 left-1/3 w-96 h-96 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }} />
       </div>
     </section>
   );

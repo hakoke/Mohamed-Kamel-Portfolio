@@ -12,7 +12,7 @@ export default function Projects() {
 
   const featuredProjects = [
     {
-      title: "Dashboard AI",
+      title: "SafeOps PPE Detection",
       slug: "dashboard-ai",
       desc: "AI-powered warehouse safety monitoring system with real-time PPE detection, facial recognition for attendance, and automated violation alerts using computer vision",
       tech: ["YOLOv8", "OpenCV", "ArcFace", "DeepStream", "Python", "Flask", "MongoDB", "ByteTrack"],
@@ -35,10 +35,10 @@ export default function Projects() {
 
   const additionalProjects = [
     {
-      title: "Discord AI",
+      title: "ServerMate Discord AI",
       slug: "discord-ai",
       desc: "Intelligent Discord bot with AI-powered features, natural language processing, and interactive commands for enhanced server management",
-      tech: ["Python", "Discord.py", "OpenAI API", "LangChain", "PostgreSQL"],
+      tech: ["Python", "Discord.py", "Google Gemini API", "LangChain", "PostgreSQL"],
       github: "https://github.com/hakoke/Discord_AI",
       gradient: "from-indigo-500/20 via-purple-500/20 to-pink-500/20",
       image: "🤖",
@@ -55,23 +55,30 @@ export default function Projects() {
   ];
 
   return (
-    <section id="projects" className="py-20 px-4 bg-white/[0.02]" ref={ref}>
+    <section id="projects" className="py-20 px-4 bg-gradient-to-b from-transparent via-purple-900/10 to-transparent relative overflow-hidden" ref={ref}>
+      {/* Colorful background effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 rounded-full blur-3xl" />
+      </div>
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-bold mb-4 text-center">Projects</h2>
-          <p className="text-gray-400 text-center mb-16 max-w-2xl mx-auto">
+          <h2 className="text-5xl md:text-6xl font-bold mb-4 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            Projects
+          </h2>
+          <p className="text-gray-300 text-center mb-16 max-w-2xl mx-auto text-lg">
             Showcasing my expertise in full-stack development, AI/ML integration, and real-time applications
           </p>
 
           {/* Featured Projects */}
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-6">
-              <Star className="text-yellow-500 fill-yellow-500" size={24} />
-              <h3 className="text-2xl font-semibold">Featured Projects</h3>
+              <Star className="text-yellow-400 fill-yellow-400 drop-shadow-lg" size={28} />
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Featured Projects</h3>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {featuredProjects.map((project, idx) => (
@@ -82,11 +89,11 @@ export default function Projects() {
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                 >
                   <Link href={`/projects/${project.slug}`}>
-                    <div className="group relative p-8 bg-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer border border-white/10 hover:border-white/20 h-full overflow-hidden">
+                    <div className="group relative p-8 bg-gradient-to-br from-white/10 to-white/5 rounded-xl hover:from-white/15 hover:to-white/10 transition-all cursor-pointer border-2 border-white/20 hover:border-white/40 h-full overflow-hidden transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/20">
                       <div
-                        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10`}
+                        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} rounded-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-2xl -z-10`}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       
                       <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                         <ArrowRight className="text-blue-400" size={24} />
@@ -133,7 +140,7 @@ export default function Projects() {
 
           {/* Additional Projects */}
           <div className="mb-16">
-            <h3 className="text-2xl font-semibold mb-6">Additional Projects</h3>
+            <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Additional Projects</h3>
             <div className="grid md:grid-cols-2 gap-6">
               {additionalProjects.map((project, idx) => (
                 <motion.div
@@ -143,11 +150,11 @@ export default function Projects() {
                   transition={{ duration: 0.5, delay: 0.2 + idx * 0.1 }}
                 >
                   <Link href={`/projects/${project.slug}`}>
-                    <div className="group relative p-6 bg-white/5 rounded-lg hover:bg-white/10 transition-all cursor-pointer border border-white/10 hover:border-white/20 h-full flex flex-col overflow-hidden">
+                    <div className="group relative p-6 bg-gradient-to-br from-white/10 to-white/5 rounded-lg hover:from-white/15 hover:to-white/10 transition-all cursor-pointer border-2 border-white/20 hover:border-white/40 h-full flex flex-col overflow-hidden transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20">
                       <div
-                        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10`}
+                        className={`absolute inset-0 bg-gradient-to-br ${project.gradient} rounded-lg opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-2xl -z-10`}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-2">
