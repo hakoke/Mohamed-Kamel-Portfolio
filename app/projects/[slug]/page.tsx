@@ -59,6 +59,11 @@ export default function ProjectPage() {
           name: "OpenCV",
           description: "Computer vision library for image processing and spatial operations",
           type: "Library"
+        },
+        {
+          name: "PyTorch",
+          description: "Deep learning framework used for ReID models and GPU-accelerated inference",
+          type: "Framework"
         }
       ],
       hosting: {
@@ -182,10 +187,11 @@ def _recognize_face(self, person_crop: np.ndarray) -> tuple:
         {
           language: "python",
           title: "Multi-Camera Tracking with ByteTrack and ReID",
-          description: "ByteTrack integration for persistent IDs within a camera, ReID for cross-camera tracking using appearance features, with real-time visualization of track IDs and global ReID IDs.",
+          description: "ByteTrack integration for persistent IDs within a camera, ReID for cross-camera tracking using PyTorch-powered appearance features, with real-time visualization of track IDs and global ReID IDs.",
           highlights: [
             "ByteTrack provides frame-to-frame tracking within a single camera",
             "ReID enables cross-camera tracking by matching appearance embeddings",
+            "PyTorch-powered ReID models with GPU/CPU support for efficient inference",
             "Real-time visualization of track IDs and global ReID IDs",
             "Camera-specific track ID mapping for multi-camera environments"
           ],
