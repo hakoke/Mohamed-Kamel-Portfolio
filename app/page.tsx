@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import Contact from "@/components/Contact";
@@ -21,7 +20,6 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-purple-900/10 to-[#0a0a0a] relative">
       <Navigation />
       <Hero />
-      <About />
       <Projects />
       <Skills />
       <Contact />

@@ -43,10 +43,10 @@ export default function Hero() {
           </div>
 
           <a
-            href="#about"
+            href="#projects"
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 hover:opacity-90 rounded-lg transition-all transform hover:scale-105 font-semibold shadow-lg shadow-pink-500/50"
           >
-            Learn More
+            View Projects
             <ArrowDown size={20} />
           </a>
         </motion.div>
