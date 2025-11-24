@@ -16,14 +16,15 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Hi, I&apos;m <span className="text-blue-500">Mohamed Kamel</span>
+            Hi, I&apos;m <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">Mohamed Kamel</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 mb-8">
+          <p className="text-xl md:text-2xl text-gray-300 mb-8">
             Full-Stack Developer & AI Enthusiast
           </p>
-          <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
-            I build interactive web applications and experiment with machine learning.
-            Currently working on game development and AI projects.
+          <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+            I specialize in building modern web applications, integrating AI/ML solutions, 
+            and creating real-time interactive experiences. Passionate about computer vision, 
+            full-stack development, and turning complex problems into elegant solutions.
           </p>
 
           <div className="flex gap-4 justify-center mb-12">
@@ -54,9 +55,10 @@ export default function Hero() {
       </div>
 
       {/* background effects */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
     </section>
   );

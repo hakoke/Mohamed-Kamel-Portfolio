@@ -38,15 +38,21 @@ export default function About() {
           <h2 className="text-4xl font-bold mb-12 text-center">About Me</h2>
 
           <div className="mb-16 max-w-3xl mx-auto">
-            <p className="text-lg text-gray-400 mb-4">
-              I&apos;m a developer who loves building things that live on the internet.
-              My interest in development started back when I wanted to create my own games
-              and applications.
+            <p className="text-lg text-gray-300 mb-4 leading-relaxed">
+              I&apos;m a passionate full-stack developer with a strong focus on AI/ML integration 
+              and real-time applications. My journey in software development began with a curiosity 
+              about how things work, which led me to explore everything from web development to 
+              computer vision and machine learning.
             </p>
-            <p className="text-lg text-gray-400">
-              These days, I focus on creating interactive experiences with JavaScript/TypeScript
-              and exploring the possibilities of AI. When I&apos;m not coding, you can find me
-              working on game projects or training machine learning models.
+            <p className="text-lg text-gray-300 mb-4 leading-relaxed">
+              I specialize in building scalable applications using modern technologies like Next.js, 
+              React, and Python. My recent work includes developing AI-powered systems for safety 
+              monitoring, creating intelligent Discord bots, and building multiplayer games with 
+              real-time synchronization.
+            </p>
+            <p className="text-lg text-gray-300 leading-relaxed">
+              When I&apos;m not coding, I enjoy exploring new AI frameworks, contributing to open-source 
+              projects, and continuously learning about emerging technologies in the field.
             </p>
           </div>
 
