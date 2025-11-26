@@ -105,6 +105,24 @@ export default function ProjectPage() {
           title: "Safety Violations",
           description: "All detected safety violations show up here in real-time. To prevent spam violations, we built in smart filtering: a 30 to 90 second cooldown per person, per-frame deduplication that groups violations by camera, person, and violation type, and NMS-like filtering that keeps only the highest confidence detection. Each violation shows the status, employee name (or Unknown if not recognized), timestamp, location, violation type (missing helmet, vest, gloves, or boots), and AI confidence percentage. You can click to view the actual image of the person committing the violation and see all the details like exact time, camera location, and employee information."
         },
+        { 
+          url: "/safeops1.jpg", 
+          alt: "Safety Reports Dashboard",
+          title: "Safety Reports Dashboard",
+          description: "The reports dashboard gives you detailed insights into safety violations over time. You can filter reports by daily, weekly, or monthly timeframes and choose any reference date. The summary cards show total violations, unique employees involved, the most common violation type, and which camera detected the most issues. A trend graph visualizes violations across the selected period, while tables break down the data by top employees, locations, and violation types. The most recent violation log shows the latest detection with full details including timestamp, employee, location, camera, and violation type. Real-time notifications alert you when new violations are detected."
+        },
+        { 
+          url: "/safeops2.jpg", 
+          alt: "Attendance Management",
+          title: "Attendance Management",
+          description: "The attendance management screen tracks all employee check-ins and check-outs automatically. The system records entry time when an employee is first detected by any camera, and marks exit time when they're gone from all cameras for more than 5 minutes. Each record shows the date, employee name and ID, entry time, exit time if available, current duration, and status. Employees still inside show as Present with a live duration counter, while those who have exited show their complete session duration. This gives you a real-time view of who's currently in the warehouse and their attendance history."
+        },
+        { 
+          url: "/safeops3.jpg", 
+          alt: "Employee Location Tracking",
+          title: "Employee Location Tracking",
+          description: "Click any employee ID to instantly see their current location and last known position. The popup shows the employee's name and ID, which camera last detected them, and the exact timestamp of that detection. This real-time location tracking helps you quickly find employees in the warehouse, verify their presence at specific locations, and monitor movement patterns. The system updates automatically as employees move between different camera zones, giving you live visibility into where everyone is at any moment."
+        },
       ],
       codeSnippets: [
         {
