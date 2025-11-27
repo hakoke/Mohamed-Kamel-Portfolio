@@ -123,6 +123,12 @@ export default function ProjectPage() {
           title: "Employee Location Tracking",
           description: "Click any employee ID to instantly see their current location and last known position. The popup shows the employee's name and ID, which camera last detected them, and the exact timestamp of that detection. This real-time location tracking helps you quickly find employees in the warehouse, verify their presence at specific locations, and monitor movement patterns. The system updates automatically as employees move between different camera zones, giving you live visibility into where everyone is at any moment."
         },
+        { 
+          url: "/SafeOpsDatabase.jpg", 
+          alt: "MongoDB Database Structure",
+          title: "MongoDB Database Architecture",
+          description: "This shows the MongoDB Atlas database structure that powers SafeOps. The database contains 10 collections that organize all the system data. The attendances collection tracks employee check-ins and check-outs. Cameras stores all camera configurations and their connection details. Employees holds all employee profiles, photos, and recognition data. Locations tracks different warehouse zones and areas. Organizations manages multi-warehouse setups. Schedules stores employee work schedules and shift information. Syncversions handles data synchronization between the AI processing on AWS and the web application. Users manages admin and user accounts. Violations stores all detected safety violations with timestamps, images, and details. Warehouses organizes multiple warehouse locations. This structured database design ensures fast queries, efficient data organization, and scalable storage for all safety monitoring data."
+        },
       ],
       codeSnippets: [
         {
