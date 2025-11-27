@@ -23,38 +23,22 @@ export default function Contact() {
     setStatus('idle');
 
     try {
-      console.log('Submitting form:', formData);
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
-      console.log('Response status:', response.status);
       const data = await response.json();
-      console.log('Response data:', data);
-      
-      // Check if there's an error in the response
-      if (data.error || data.details) {
-        setStatus('error');
-        console.error('❌ Failed to send email');
-        console.error('Error details:', data.details || data.error);
-        console.error('Error name:', data.errorName);
-        alert(`Failed to send: ${data.details || data.error}`);
+
+      if (!response.ok || !data.success) {
+        setStatus("error");
         return;
       }
 
-      if (response.ok && data.success) {
-        setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
-        console.log('✅ Email sent successfully!');
-      } else {
-        setStatus('error');
-        console.error('❌ Unexpected response:', data);
-      }
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
-      setStatus('error');
-      console.error('❌ Network error:', error);
+      setStatus("error");
     } finally {
       setSending(false);
     }

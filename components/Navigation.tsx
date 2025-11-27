@@ -18,6 +18,7 @@ export default function Navigation() {
   const links = [
     { name: "Home", href: "#home" },
     { name: "Projects", href: "#projects" },
+    { name: "AI Wingman", href: "#ai" },
     { name: "Skills", href: "#skills" },
     { name: "Contact", href: "#contact" },
   ];
