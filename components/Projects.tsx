@@ -94,7 +94,7 @@ export default function Projects() {
                         alt={project.logo.alt}
                         width={72}
                         height={72}
-                        className="h-full w-full object-contain"
+                        className="h-full w-full object-cover"
                         sizes="72px"
                         priority={idx === 0}
                       />

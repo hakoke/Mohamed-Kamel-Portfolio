@@ -88,11 +88,15 @@ export async function POST(request: Request) {
               threshold: "BLOCK_MEDIUM_AND_ABOVE",
             },
             {
-              category: "HARM_CATEGORY_SEXUAL",
+              category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
               threshold: "BLOCK_MEDIUM_AND_ABOVE",
             },
             {
-              category: "HARM_CATEGORY_DANGEROUS",
+              category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+              threshold: "BLOCK_MEDIUM_AND_ABOVE",
+            },
+            {
+              category: "HARM_CATEGORY_CIVIC_INTEGRITY",
               threshold: "BLOCK_MEDIUM_AND_ABOVE",
             },
           ],

@@ -23,7 +23,7 @@ const introMessage: ChatMessage = {
   id: "intro",
   role: "assistant",
   content:
-    "Hey, I'm MK's AI Wingman powered by Gemini 2.5 Flash. Ask me about my builds, dev process, or how I'd tackle your project. I answer in plain English but come armed with architecture details.",
+    "Hey, I'm MK's AI Wingman powered by Gemini 2.0 Flash. Ask me about my builds, dev process, or how I'd tackle your project. I answer in plain English but come armed with architecture details.",
 };
 
 const quickPrompts = [
@@ -133,7 +133,7 @@ export default function AiAssistant() {
             Ask anything about my builds, stack, or thought process.
           </h2>
           <p className="mt-4 text-gray-200">
-            Gemini 2.5 Flash has real context on my flagship projects,
+            Gemini 2.0 Flash has real context on my flagship projects,
             architecture diagrams, CV, and problem-solving style. Treat it like
             a personal demo teammate—you can drill into safety systems, resume
             automation, Discord bots, or the way I approach new AI briefs.
@@ -153,7 +153,7 @@ export default function AiAssistant() {
             <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-white">
                 <Zap size={18} className="text-pink-300" />
-                Gemini 2.5 Flash
+                Gemini 2.0 Flash
               </div>
               <p className="mt-2 text-sm text-gray-300">
                 Ultra-low latency model with a temperature tuned for clear,

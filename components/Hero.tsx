@@ -30,7 +30,7 @@ export default function Hero() {
             it until it ships. (You can also quiz my new AI wingman below.)
           </p>
 
-          <div className="flex gap-4 justify-center mb-12">
+          <div className="mt-10 mb-12 flex gap-4 justify-center">
             <a
               href="https://github.com/hakoke"
               target="_blank"
@@ -73,7 +73,7 @@ export default function Hero() {
           className="mt-16 grid w-full gap-4 text-left sm:grid-cols-3"
         >
           {[
-            { label: "AI products shipped", value: "3 prod builds" },
+            { label: "Products shipped", value: "3 prod builds" },
             { label: "Data streaming & CV hours", value: "1,200+" },
             { label: "Stack", value: "Next.js · Python · GPUs" },
           ].map((stat) => (
