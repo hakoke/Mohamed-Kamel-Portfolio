@@ -19,6 +19,14 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Client-side email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setStatus("error");
+      return;
+    }
+    
     setSending(true);
     setStatus('idle');
 
@@ -26,7 +34,10 @@ export default function Contact() {
       const response = await fetch("/api/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          email: formData.email.trim(), // Trim email before sending
+        }),
       });
       
       const data = await response.json().catch(() => ({ 

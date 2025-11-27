@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const portfolioInbox =
-  process.env.PORTFOLIO_CONTACT_EMAIL || "mykamel.cs@gmail.com";
+  process.env.PORTFOLIO_CONTACT_EMAIL || "ynkk46i2@gmail.com";
 const fromEmail = process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev";
 
 // Initialize Resend only if API key exists
@@ -32,11 +32,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate email format
+    // Validate email format (must be valid email@domain.com format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const trimmedEmail = email.trim();
+    
+    if (!emailRegex.test(trimmedEmail)) {
       return NextResponse.json(
-        { error: "Invalid email format", success: false },
+        { error: "Invalid email format. Please enter a valid email address.", success: false },
         { status: 400 },
       );
     }
@@ -44,14 +46,14 @@ export async function POST(request: Request) {
     const payload = {
       from: `Portfolio Contact <${fromEmail}>`,
       to: portfolioInbox,
-      replyTo: email,
+      replyTo: trimmedEmail,
       subject: `Portfolio Contact from ${name}`,
       html: `
         <h2>New portfolio message</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Name:</strong> ${name.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+        <p><strong>Email:</strong> ${trimmedEmail.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
         <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br>")}</p>
+        <p>${message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}</p>
       `,
     };
 
