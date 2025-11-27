@@ -28,9 +28,14 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      const data = await response.json();
+      
+      const data = await response.json().catch(() => ({ 
+        error: "Failed to parse server response",
+        success: false 
+      }));
 
       if (!response.ok || !data.success) {
+        console.error("Email send failed:", data.error || "Unknown error");
         setStatus("error");
         return;
       }
@@ -38,6 +43,7 @@ export default function Contact() {
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
+      console.error("Email send error:", error);
       setStatus("error");
     } finally {
       setSending(false);
