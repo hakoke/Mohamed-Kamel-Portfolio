@@ -94,18 +94,18 @@ export default function Projects() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
                   {project.logo.type === "image" ? (
-                    <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden">
+                    <span className="relative inline-flex h-24 w-24 items-center justify-center overflow-hidden">
                       <Image
                         src={project.logo.src}
                         alt={project.logo.alt}
                         fill
                         className="object-contain"
-                        sizes="80px"
+                        sizes="96px"
                         priority={idx === 0}
                       />
                     </span>
                   ) : (
-                    <span className="inline-flex h-20 w-20 items-center justify-center text-4xl">
+                    <span className="inline-flex h-24 w-24 items-center justify-center text-4xl">
                       {project.logo.src}
                     </span>
                   )}

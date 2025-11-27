@@ -47,7 +47,7 @@ export default function ProjectDetail({ project }: Props) {
     "Sorry, this repository is private. Reach out and I'll walk you through it live.";
   const logoBadge =
     project.logo?.type === "image" ? (
-      <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden">
+      <span className="relative inline-flex h-24 w-24 items-center justify-center overflow-hidden">
         <Image
           src={project.logo.src}
           alt={project.logo.alt}
@@ -57,7 +57,7 @@ export default function ProjectDetail({ project }: Props) {
         />
       </span>
     ) : (
-      <span className="inline-flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-3xl">
+      <span className="inline-flex h-24 w-24 items-center justify-center text-4xl">
         {project.logo?.src}
       </span>
     );
