@@ -36,7 +36,7 @@ export default function Projects() {
       tech: ["Python", "Discord.py", "Google Gemini API", "Imagen 3.0", "Vertex AI", "PostgreSQL"],
       github: "https://github.com/hakoke/Discord_AI",
       gradient: "from-indigo-500/30 via-purple-500/30 to-pink-500/30",
-      image: "🤖",
+      image: "/Servermate/Profilepic.jpg",
     },
   ];
 

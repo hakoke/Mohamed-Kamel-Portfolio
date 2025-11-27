@@ -308,7 +308,7 @@ useEffect(() => {
       github: "https://github.com/hakoke/Discord_AI",
       gradient: "from-indigo-500 via-purple-500 to-pink-500",
       gradientLight: "from-indigo-500/20 via-purple-500/20 to-pink-500/20",
-      image: "🤖",
+      image: "/Servermate/Profilepic.jpg",
       overview: "ServerMate is a production-ready Discord bot that goes way beyond typical chatbots. What makes it special is the AI actually decides which model to use for each message. For normal chat, it uses the fast Gemini 2.0 Flash model which responds in under a second. But when you ask coding questions or need complex reasoning, it automatically switches to Gemini 2.5 Pro, the smartest model available. The bot also remembers everything about users and servers, can generate images and videos, analyze pictures you send, search the web, and has a real personality that matches your energy. It's deployed on Railway with a PostgreSQL database tracking every interaction, user memory, and learned behaviors.",
       features: [
         "Intelligent dual-model system: AI automatically chooses between fast model (Gemini 2.0 Flash) for casual chat and smart model (Gemini 2.5 Pro) for complex tasks",
