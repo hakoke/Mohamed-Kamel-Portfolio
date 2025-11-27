@@ -94,7 +94,7 @@ export default function Projects() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
                   {project.logo.type === "image" ? (
-                    <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                    <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden">
                       <Image
                         src={project.logo.src}
                         alt={project.logo.alt}
@@ -105,7 +105,7 @@ export default function Projects() {
                       />
                     </span>
                   ) : (
-                    <span className="inline-flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-4xl">
+                    <span className="inline-flex h-20 w-20 items-center justify-center text-4xl">
                       {project.logo.src}
                     </span>
                   )}
