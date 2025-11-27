@@ -208,7 +208,7 @@ export default function AiAssistant() {
           </div>
           <div
             ref={chatScrollRef}
-            className="mt-4 h-[420px] space-y-4 overflow-y-auto pr-2 sm:h-[460px]"
+            className="mt-4 flex-1 min-h-[420px] max-h-[420px] space-y-4 overflow-y-auto pr-2 sm:min-h-[460px] sm:max-h-[460px]"
           >
             {messages.map((message) => (
               <div
