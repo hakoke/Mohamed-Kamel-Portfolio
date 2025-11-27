@@ -36,10 +36,15 @@ export default function AiAssistant() {
   const [messages, setMessages] = useState<ChatMessage[]>([introMessage]);
   const [input, setInput] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const node = chatScrollRef.current;
+    if (!node) return;
+    node.scrollTo({
+      top: node.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages, isThinking]);
 
   const handleSend = async (prompt?: string) => {
@@ -68,11 +73,12 @@ export default function AiAssistant() {
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        throw new Error("Failed to reach AI helper");
+        throw new Error(data?.error || "Failed to reach AI helper");
       }
 
-      const data = await res.json();
       const reply = data?.message?.trim();
 
       setMessages((prev) => [
@@ -92,7 +98,9 @@ export default function AiAssistant() {
           id: crypto.randomUUID(),
           role: "assistant",
           content:
-            "Whoops—Gemini didn't respond in time. Give it another shot in a few seconds.",
+            error instanceof Error
+              ? `Wingman error: ${error.message}`
+              : "Whoops—Gemini didn't respond in time. Give it another shot in a few seconds.",
         },
       ]);
     } finally {
@@ -198,7 +206,10 @@ export default function AiAssistant() {
               beta
             </span>
           </div>
-          <div className="mt-4 flex-1 space-y-4 overflow-y-auto pr-1">
+          <div
+            ref={chatScrollRef}
+            className="mt-4 h-[420px] space-y-4 overflow-y-auto pr-2"
+          >
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -221,7 +232,6 @@ export default function AiAssistant() {
                 Drafting response…
               </div>
             )}
-            <div ref={chatEndRef} />
           </div>
 
           <form
@@ -236,6 +246,12 @@ export default function AiAssistant() {
               placeholder="Ask how I designed SafeOps, tuned Bespoke, or scaled ServerMate..."
               value={input}
               onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && !event.shiftKey) {
+                  event.preventDefault();
+                  handleSend();
+                }
+              }}
               className="w-full resize-none bg-transparent text-sm text-white placeholder:text-gray-500 focus:outline-none"
             />
             <button

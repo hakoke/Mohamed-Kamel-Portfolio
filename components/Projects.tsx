@@ -86,16 +86,16 @@ export default function Projects() {
               className="flex h-full flex-col gap-6"
             >
               <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   {project.logo.type === "image" ? (
-                    <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 p-2">
+                    <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 p-3">
                       <Image
                         src={project.logo.src}
                         alt={project.logo.alt}
-                        width={56}
-                        height={56}
+                        width={72}
+                        height={72}
                         className="h-full w-full object-contain"
-                        sizes="56px"
+                        sizes="72px"
                         priority={idx === 0}
                       />
                     </span>

@@ -15,11 +15,6 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-gray-300">
-            <span className="h-2 w-2 rounded-full bg-gradient-to-r from-pink-500 to-cyan-500" />
-            Dubai · Shipping AI products for real teams
-          </div>
-
           <h1 className="text-5xl font-bold md:text-7xl">
             Hi, I&apos;m{" "}
             <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
@@ -34,15 +29,6 @@ export default function Hero() {
             design polish, GPU inference, or a careful rollout plan, I stay with
             it until it ships. (You can also quiz my new AI wingman below.)
           </p>
-
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-sm text-gray-400">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">
-              ⚡ Currently building safety + AI copilots
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1">
-              🎓 Fresh grad · Computer Engineering
-            </span>
-          </div>
 
           <div className="flex gap-4 justify-center mb-12">
             <a
@@ -61,7 +47,7 @@ export default function Hero() {
             </a>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-6">
             <a
               href="#projects"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 px-8 py-4 font-semibold shadow-lg shadow-pink-500/50 transition-all hover:scale-105 hover:opacity-90"

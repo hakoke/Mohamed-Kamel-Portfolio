@@ -33,10 +33,12 @@ Guidelines:
 - Prefer actionable answers over vague hype.
 - Highlight that I'm hands-on with AI agents, CV, and full-stack work.`;
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
 export async function POST(request: Request) {
-  if (!process.env.GEMINI_API_KEY) {
+  const apiKey = process.env.GEMINI_API_KEY;
+
+  if (!apiKey) {
     return NextResponse.json(
       { error: "Missing GEMINI_API_KEY environment variable." },
       { status: 500 },
@@ -54,23 +56,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const contents = [
-      {
-        role: "user",
-        parts: [{ text: systemPrompt }],
-      },
-      ...history.map((message) => ({
+    const contents = history.map((message) => ({
         role: message.role === "assistant" ? "model" : "user",
         parts: [{ text: message.content }],
-      })),
-    ];
+      }));
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          systemInstruction: {
+            role: "system",
+            parts: [{ text: systemPrompt }],
+          },
           contents,
           generationConfig: {
             temperature: 0.35,
