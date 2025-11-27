@@ -73,7 +73,7 @@ export default function Hero() {
           className="mt-16 grid w-full gap-4 text-left sm:grid-cols-3"
         >
           {[
-            { label: "Products shipped", value: "3 prod builds" },
+            { label: "Products shipped", value: "3 builds" },
             { label: "Data streaming & CV hours", value: "1,200+" },
             { label: "Stack", value: "Next.js · Python · GPUs" },
           ].map((stat) => (

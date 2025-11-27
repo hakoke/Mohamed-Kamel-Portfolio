@@ -367,7 +367,7 @@ if self.enable_tracking:
       "Bespoke connects clients with vetted architecture and engineering talent. I built two signature AI systems: a streaming RFP copilot that switches between fast and smart Gemini models, and a resume pipeline that first extracts structured data then performs deep profiling to match services, set rates, and craft narratives.",
     features: [
       "Streaming RFP assistant with Server-Sent Events and sub-500ms first-token latency in fast mode",
-      "Two-stage resume parsing: Gemini Nano extracts structured data, Gemini Mini performs deep analysis",
+      "Two-stage resume parsing: Gemini 2.0 Flash extracts structured data, Gemini 3 Pro performs deep analysis",
       "Automatic model routing that chooses between Gemini 2.0 Flash and Gemini 3 Pro per query complexity",
       "Fuzzy service catalog mapping that aligns 100+ engineering/architecture services to user inputs",
       "Rate engine that blends region, seniority, and job history to output realistic hourly recommendations",
@@ -465,17 +465,17 @@ const stream = new ReadableStream<Uint8Array>({
         language: "typescript",
         title: "Two-Stage Resume Processing Pipeline",
         description:
-          "Nano model extracts structured data, Mini model performs deep profiling and service mapping.",
+          "Stage one uses Gemini 2.0 Flash for lightning-fast extraction, stage two taps Gemini 3 Pro for reasoning-heavy profiling.",
         highlights: [
+          "Stage handoff: Flash for field extraction, Pro for deep profiling",
           "Strict JSON outputs with validation",
-          "Hint passing from stage one to stage two",
           "Service catalog injected into the prompt",
         ],
         code: `export async function parseResume(resumeUrl: string) {
   const resumeText = await extractTextFromResume(resumeUrl);
-  const nano = await callNanoModel(resumeText);
-  const mini = await callMiniModel(resumeText, nano);
-  return { resumeUrl, resumeText, nano, mini };
+  const flash = await callFlashStage(resumeText); // gemini-2.0-flash
+  const pro = await callProStage(resumeText, flash); // gemini-3.0-pro
+  return { resumeUrl, resumeText, flash, pro };
 }`,
       },
       {
