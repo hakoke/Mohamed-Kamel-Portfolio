@@ -488,10 +488,13 @@ Respond with ONLY valid JSON."""
         analysis_text = await loop.run_in_executor(None, _analyze_sync)
         
         # Extract JSON from response
-        if '```json' in analysis_text:
-            analysis_text = analysis_text.split('```json')[1].split('```')[0]
-        elif '```' in analysis_text:
-            analysis_text = analysis_text.split('```')[1].split('```')[0]
+        backtick = chr(96)
+        json_marker = backtick * 3 + 'json'
+        code_marker = backtick * 3
+        if json_marker in analysis_text:
+            analysis_text = analysis_text.split(json_marker)[1].split(code_marker)[0]
+        elif code_marker in analysis_text:
+            analysis_text = analysis_text.split(code_marker)[1].split(code_marker)[0]
         
         analysis = json.loads(analysis_text.strip())
         
