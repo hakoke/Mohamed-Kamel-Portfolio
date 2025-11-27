@@ -27,11 +27,9 @@ export default function Projects() {
   const cards = useMemo(() => featuredProjects, []);
   const handlePrivateRepoClick = (
     event: MouseEvent<HTMLButtonElement>,
-    message?: string,
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    alert(message || "This repository is private. Reach out for a walkthrough.");
   };
 
   return (
@@ -96,18 +94,20 @@ export default function Projects() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
                   {project.logo.type === "image" ? (
-                    <span className="relative inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                    <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
                       <Image
                         src={project.logo.src}
                         alt={project.logo.alt}
                         fill
-                        className="object-contain p-2"
-                        sizes="72px"
+                        className="object-contain"
+                        sizes="80px"
                         priority={idx === 0}
                       />
                     </span>
                   ) : (
-                    <span className="text-4xl">{project.logo.src}</span>
+                    <span className="inline-flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-4xl">
+                      {project.logo.src}
+                    </span>
                   )}
                   <div className="text-left">
                     <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
@@ -123,20 +123,24 @@ export default function Projects() {
                     href={project.links.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-gray-400 transition-colors hover:text-white"
+                    className="relative group text-gray-400 transition-colors hover:text-white"
                     onClick={(event) => event.stopPropagation()}
                   >
                     <Github size={22} />
+                    <span className="pointer-events-none absolute -bottom-9 left-1/2 z-10 w-max -translate-x-1/2 rounded-md bg-black/80 px-2.5 py-1 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                      View source
+                    </span>
                   </a>
                 ) : project.links.githubPrivateMessage ? (
                   <button
                     type="button"
-                    onClick={(event) =>
-                      handlePrivateRepoClick(event, project.links.githubPrivateMessage)
-                    }
-                    className="text-gray-500 transition-colors hover:text-white"
+                    onClick={handlePrivateRepoClick}
+                    className="relative group text-gray-500 transition-colors hover:text-white"
                   >
                     <Github size={22} />
+                    <span className="pointer-events-none absolute -bottom-14 left-1/2 z-10 w-48 -translate-x-1/2 rounded-md bg-black/80 px-3 py-2 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                      {project.links.githubPrivateMessage}
+                    </span>
                   </button>
                 ) : null}
               </div>

@@ -45,22 +45,19 @@ export default function ProjectDetail({ project }: Props) {
   const privateRepoMessage =
     project.links.githubPrivateMessage ||
     "Sorry, this repository is private. Reach out and I'll walk you through it live.";
-  const handlePrivateRepoAlert = () => {
-    alert(privateRepoMessage);
-  };
   const logoBadge =
     project.logo?.type === "image" ? (
-      <span className="relative inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+      <span className="relative inline-flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
         <Image
           src={project.logo.src}
           alt={project.logo.alt}
           fill
-          className="object-contain p-2"
-          sizes="64px"
+          className="object-contain"
+          sizes="80px"
         />
       </span>
     ) : (
-      <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-3xl">
+      <span className="inline-flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-3xl">
         {project.logo?.src}
       </span>
     );
@@ -92,19 +89,25 @@ export default function ProjectDetail({ project }: Props) {
                 href={project.links.github}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/10"
+                className="group relative inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:border-white/40 hover:bg-white/10"
               >
                 <Github size={16} />
                 View source
+                <span className="pointer-events-none absolute -bottom-10 left-1/2 z-10 -translate-x-1/2 rounded-md bg-black/80 px-3 py-1 text-xs opacity-0 transition group-hover:opacity-100">
+                  View source on GitHub
+                </span>
               </a>
             ) : project.links.githubPrivateMessage ? (
               <button
                 type="button"
-                onClick={handlePrivateRepoAlert}
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70"
+                onClick={(event) => event.preventDefault()}
+                className="group relative inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70"
               >
                 <Github size={16} />
                 Private repo
+                <span className="pointer-events-none absolute -bottom-16 left-1/2 z-10 w-56 -translate-x-1/2 rounded-md bg-black/80 px-3 py-2 text-xs opacity-0 transition group-hover:opacity-100">
+                  {privateRepoMessage}
+                </span>
               </button>
             ) : null}
             <a
