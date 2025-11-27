@@ -206,62 +206,64 @@ export default function AiAssistant() {
               beta
             </span>
           </div>
-          <div
-            ref={chatScrollRef}
-            className="mt-4 flex-1 min-h-[420px] max-h-[420px] space-y-4 overflow-y-auto pr-2 sm:min-h-[460px] sm:max-h-[460px]"
-          >
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
-              >
-                <div
-                  className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    message.role === "assistant"
-                      ? "bg-white/10 text-gray-100"
-                      : "bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
-                  }`}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-            {isThinking && (
-              <div className="flex items-center gap-2 text-sm text-gray-400">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Drafting response…
-              </div>
-            )}
-          </div>
-
-          <form
-            className="mt-4 flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              handleSend();
-            }}
-          >
-            <textarea
-              rows={2}
-              placeholder="Ask how I designed SafeOps, tuned Bespoke, or scaled ServerMate..."
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" && !event.shiftKey) {
-                  event.preventDefault();
-                  handleSend();
-                }
-              }}
-              className="w-full resize-none bg-transparent text-sm text-white placeholder:text-gray-500 focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={isThinking}
-              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-500 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          <div className="mt-4 flex flex-1 flex-col min-h-[460px] max-h-[520px] sm:min-h-[520px] sm:max-h-[560px]">
+            <div
+              ref={chatScrollRef}
+              className="flex-1 space-y-4 overflow-y-auto pr-2"
             >
-              {isThinking ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send size={18} />}
-            </button>
-          </form>
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
+                >
+                  <div
+                    className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      message.role === "assistant"
+                        ? "bg-white/10 text-gray-100"
+                        : "bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
+                    }`}
+                  >
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+              {isThinking && (
+                <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Drafting response…
+                </div>
+              )}
+            </div>
+
+            <form
+              className="mt-4 flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                handleSend();
+              }}
+            >
+              <textarea
+                rows={2}
+                placeholder="Ask how I designed SafeOps, tuned Bespoke, or scaled ServerMate..."
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    handleSend();
+                  }
+                }}
+                className="w-full resize-none bg-transparent text-sm text-white placeholder:text-gray-500 focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={isThinking}
+                className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-500 text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isThinking ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send size={18} />}
+              </button>
+            </form>
+          </div>
         </motion.div>
       </div>
     </section>
