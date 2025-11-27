@@ -304,49 +304,327 @@ useEffect(() => {
     },
     "discord-ai": {
       title: "ServerMate Discord AI",
-      tagline: "Intelligent Discord Bot with AI Features",
+      tagline: "Intelligent AI Assistant with Dual-Model Intelligence",
       github: "https://github.com/hakoke/Discord_AI",
       gradient: "from-indigo-500 via-purple-500 to-pink-500",
       gradientLight: "from-indigo-500/20 via-purple-500/20 to-pink-500/20",
       image: "🤖",
-      overview: "An advanced Discord bot that integrates AI capabilities to enhance server management, provide intelligent responses, and automate various server tasks using natural language processing powered by Google Gemini.",
+      overview: "ServerMate is a production-ready Discord bot that goes way beyond typical chatbots. What makes it special is the AI actually decides which model to use for each message. For normal chat, it uses the fast Gemini 2.0 Flash model which responds in under a second. But when you ask coding questions or need complex reasoning, it automatically switches to Gemini 2.5 Pro, the smartest model available. The bot also remembers everything about users and servers, can generate images and videos, analyze pictures you send, search the web, and has a real personality that matches your energy. It's deployed on Railway with a PostgreSQL database tracking every interaction, user memory, and learned behaviors.",
       features: [
-        "AI-powered natural language understanding and responses",
-        "Context-aware conversation handling",
-        "Server management automation",
-        "Custom command system with extensible architecture",
-        "Integration with Google Gemini API and LangChain",
-        "Persistent data storage for user preferences"
+        "Intelligent dual-model system: AI automatically chooses between fast model (Gemini 2.0 Flash) for casual chat and smart model (Gemini 2.5 Pro) for complex tasks",
+        "Advanced memory system: remembers user preferences, personality traits, relationship notes, and interaction history with full conversation context",
+        "Image generation: creates realistic images using Imagen 3.0 via Vertex AI with text-to-image and image editing capabilities",
+        "Video generation: produces video content from text prompts with realistic scenes and themes",
+        "Image analysis: analyzes multiple images simultaneously using vision models to understand diagrams, code screenshots, and documents",
+        "Web browsing and automation: can navigate websites, detect obstacles like CAPTCHAs, and explain what it encounters (with security controls to prevent bypassing protections)",
+        "Internet search: integrates Serper API for real-time web search and information retrieval",
+        "Context-aware conversations: reads full conversation threads and responds with complete context understanding",
+        "Learned behaviors: tracks patterns over time and adapts behavior based on server culture and user interactions",
+        "Conversational personality: uncensored responses that match user energy, casual with casual users and smart with technical questions",
+        "Multiple interaction methods: responds to mentions, replies to messages, or when you say its name",
+        "Command system: !memory to see what it remembers, !forget to clear memory, !stats for bot statistics, !imagine for image generation"
       ],
-      tech: ["Python", "Discord.py", "Google Gemini API", "LangChain", "PostgreSQL", "AsyncIO"],
+      tech: ["Python", "Discord.py", "Google Gemini API", "Google Gemini 2.0 Flash", "Google Gemini 2.5 Pro", "Imagen 3.0", "Vertex AI", "PostgreSQL", "AsyncIO", "Serper API"],
       challenges: [
-        "Implemented efficient async/await patterns for handling multiple concurrent requests",
-        "Designed conversation context management for coherent AI interactions",
-        "Optimized API usage to minimize costs while maintaining responsiveness",
-        "Created modular architecture for easy feature expansion"
+        "Built intelligent model selection system where AI analyzes each message and decides whether it needs deep reasoning or just casual conversation",
+        "Designed complex database schema with 11 interconnected tables for memory, interactions, learned behaviors, consciousness stream, and multimedia generation tracking",
+        "Optimized API costs by routing 90% of conversations through fast free model while maintaining smart model access for complex tasks",
+        "Implemented cross-server memory isolation so the bot remembers different things about users in different servers",
+        "Created conversation context management that maintains coherent AI interactions across long threads and multiple users",
+        "Integrated multiple Google Cloud services including Gemini for text, Imagen for images, and Vertex AI infrastructure",
+        "Built async architecture to handle multiple concurrent Discord servers and thousands of simultaneous requests without blocking"
       ],
-      results: "Successfully deployed bot serving multiple Discord servers with reliable AI-powered features, demonstrating proficiency in API integration, async programming, and chatbot development.",
+      results: "ServerMate is deployed and serving multiple Discord servers with reliable AI-powered features. The dual-model system keeps costs extremely low (most conversations use the free fast model) while ensuring complex questions get the smartest responses. The memory system creates personalized experiences where the bot actually remembers your preferences and conversation history. Users love the natural personality and the fact that it can generate images, analyze photos, and handle everything from casual chat to coding help. The bot has processed thousands of interactions with 282 commits showing active development and iteration based on real-world usage.",
       images: [
-        { url: "/placeholder-discord-1.jpg", alt: "Bot Interface" },
-        { url: "/placeholder-discord-2.jpg", alt: "AI Responses" },
-        { url: "/placeholder-discord-3.jpg", alt: "Command System" },
+        { 
+          url: "/Servermate/servermate1.jpg", 
+          alt: "Web Browsing with CAPTCHA Detection",
+          title: "Web Browsing and Security",
+          description: "I asked ServerMate to access chatgpt.com, and it generated both a video and a screenshot showing exactly what happened. The video shows the bot navigating to the website, and the image captures the Cloudflare CAPTCHA challenge that blocked access. The bot explained in plain language that it encountered a verification challenge and couldn't proceed. This demonstrates the bot's security awareness - it was instructed not to solve CAPTCHAs to avoid bypassing website protections, so it stopped and reported what it found instead. This shows the bot can simulate web browsing, detect obstacles, generate visual documentation, and explain what happened in natural language."
+        },
+        { 
+          url: "/Servermate/Servermate2.jpg", 
+          alt: "Image Generation Example",
+          title: "Realistic Image Generation",
+          description: "I asked ServerMate to create a realistic photo of Travis Scott and Elon Musk sitting together discussing something. The bot understood the complex request, replied conversationally saying it was on it, and generated exactly what I asked for - two people who look like those figures sitting at a meeting table with a city skyline in the background. The image looks professional with good lighting and realistic details. The bot correctly generated look-alikes rather than actual celebrity images, which shows it follows safe image generation practices. This demonstrates natural language understanding, high-quality image generation, creative task handling, and the ability to follow complex multi-part instructions."
+        },
+        { 
+          url: "/Servermate/Servermate3.jpg", 
+          alt: "Video Generation Example",
+          title: "Video Generation Capability",
+          description: "I asked ServerMate to generate a video, and it created a 20-second video of a guy working at McDonald's. The video thumbnail shows a man in a red McDonald's uniform with a cap, assembling a burger at a kitchen counter. You can see McDonald's branding including the fries boxes with the yellow M logo, the classic golden arches in the background, and digital menu screens above him. The setting looks like a typical McDonald's kitchen. The bot replied saying it created the video, showing it can handle multimedia output, create themed realistic content, respond conversationally, and deliver user-friendly media directly within Discord. Video generation is a complex AI capability that very few bots have."
+        },
+        { 
+          url: "/Servermate/Servermate4.jpg", 
+          alt: "Comparative Analysis with Multiple Images",
+          title: "Advanced Reasoning and Image Integration",
+          description: "I asked ServerMate to compare the countryside of Georgia (the country) with Abu Dhabi. The bot wrote a structured multi-paragraph comparison covering topography, climate, color palettes, and atmosphere for both regions. It included four generated images - two showing Georgia's green mountains, stone houses, and fertile landscapes, and two showing Abu Dhabi's golden desert dunes with off-road vehicles. The comparison was accurate and written in a travel-guide style, covering things like Georgia being mountainous and temperate while Abu Dhabi is hot and arid. This demonstrates the bot's ability to retrieve or generate multiple relevant images, write structured explanations, make accurate comparisons, produce professional content, and combine visual and textual elements in one cohesive response."
+        },
+        { 
+          url: "/Servermate/servermatedatabase.jpg", 
+          alt: "PostgreSQL Database Schema",
+          title: "Production Database Architecture",
+          description: "This shows the PostgreSQL database dashboard with all 11 tables that power ServerMate's memory and functionality. The consciousness table stores meta-awareness and AI state. Interactions logs every conversation, message history, and context. Learned_behaviour tracks patterns the bot discovers over time. Reminders and scheduled_messages handle time-based tasks. Server_bans tracks moderation decisions. Server_configs stores per-server settings. Server_memory holds long-term knowledge about each server's culture and roles. Server_structure maps out channels, roles, and hierarchy. User_memory stores personality traits, preferences, and relationship notes for each user. Video_generation tracks all generated videos with metadata. Most Discord bots have 1-2 simple tables - this has 11 specialized tables showing advanced backend engineering, database architecture skills, AI agent memory design, and production-level system structure. It's more like a mini AI operating system than a typical bot."
+        },
       ],
       codeSnippets: [
         {
           language: "python",
-          title: "AI Response Handler (Gemini)",
-          code: `# Placeholder for Google Gemini integration
-async def handle_message(message):
-    response = await gemini.generate(message.content)
-    await message.channel.send(response)`,
+          title: "AI-Driven Model Selection",
+          description: "The bot uses AI to analyze each message and automatically decide whether it needs deep reasoning or just casual conversation. Image searches and small talk always use the fast model, while complex questions trigger the smart model.",
+          highlights: [
+            "AI analyzes message content to decide model selection automatically",
+            "Optimizations: image searches and small talk always use fast model",
+            "Fast model (Gemini 2.0 Flash) for casual chat - responds in under 1 second",
+            "Smart model (Gemini 2.5 Pro) for coding, debugging, and complex reasoning",
+            "Thread-safe decision making with intelligent prompt engineering"
+          ],
+          code: `async def decide_model():
+    """Thread-safe model selection using AI decision making"""
+    
+    # OPTIMIZATION: Image searches NEVER need smart model - always use fast
+    if wants_image_search or (image_search_results and len(image_search_results) > 0):
+        print(f"⚡ [{username}] Using FAST model for image search (optimization)")
+        return False
+    
+    # OPTIMIZATION: Small talk NEVER needs smart model - always use fast
+    if message_meta.get("small_talk"):
+        print(f"⚡ [{username}] Using FAST model for small talk (optimization)")
+        return False
+    
+    decision_model = get_fast_model()
+    model_decision_prompt = f"""User message: "{message.content}"
+    
+Does this require DEEP REASONING/CODING or just CASUAL CONVERSATION?
+
+DEEP REASONING examples:
+- "help me debug this code"
+- "explain why quantum entanglement works"
+- "design a scalable architecture for..."
+- "analyze this algorithm's time complexity"
+- Technical/mathematical questions
+
+CASUAL CONVERSATION examples:
+- "what's up?"
+- "tell me a joke"
+- "give me images of X" (image search - use FAST)
+- Simple questions
+- General chat
+
+Respond with ONLY one word: "SMART" or "FAST"
+
+Now decide: "{message.content}" -> """
+    
+    try:
+        decision_response = await queued_generate_content(decision_model, model_decision_prompt)
+        decision = decision_response.text.strip().upper()
+        return 'SMART' in decision
+    except Exception as e:
+        handle_rate_limit_error(e)
+        return False`,
         },
         {
           language: "python",
-          title: "Context Management",
-          code: `# Placeholder for context handling
-def maintain_context(conversation_id):
-    context = get_context(conversation_id)
-    return context`,
+          title: "AI-Driven Memory System",
+          description: "The bot analyzes every interaction using AI to update its memory about users. It maintains brutally honest assessments, personality traits, preferences, and relationship notes that evolve over time based on conversation history.",
+          highlights: [
+            "AI analyzes interactions to extract personality insights automatically",
+            "Brutally honest memory system that tracks intelligence, communication style, humor",
+            "Free-form JSON structure allows bot to remember anything it finds important",
+            "Integrates recent conversation history for context-aware memory updates",
+            "Thread-safe async operations with proper error handling"
+          ],
+          code: `async def analyze_and_update_memory(self, user_id: str, username: str,
+                                    user_message: str, bot_response: str):
+    """Analyze interaction and update memory using AI (async)"""
+    try:
+        # Get current memory
+        memory_record = await self.db.get_or_create_user_memory(user_id, username)
+        
+        # Get recent interactions for context
+        recent_interactions = await self.db.get_user_interactions(user_id, limit=10)
+        
+        # Build context for AI analysis
+        analysis_prompt = f"""You are analyzing a conversation to update your BRUTALLY HONEST memory about a user.
+
+USER: {username}
+
+CURRENT INTERACTION:
+User: {user_message}
+You: {bot_response}
+
+CURRENT MEMORY:
+{json.dumps(memory_record, indent=2, default=str)}
+
+RECENT CONVERSATION HISTORY:
+{json.dumps([{
+    'user': r['user_message'],
+    'bot': r['bot_response'],
+    'time': r['timestamp'].isoformat(),
+    'has_images': r.get('has_images', False),
+    'has_documents': r.get('has_documents', False),
+} for r in recent_interactions], indent=2, default=str)}
+
+YOU HAVE COMPLETE FREEDOM TO STRUCTURE YOUR MEMORY HOWEVER YOU WANT.
+Store whatever you observe that seems important. BE BRUTALLY HONEST - this is YOUR private memory.
+
+You can track anything:
+- Intelligence level, communication style, humor
+- Personality traits, quirks, patterns
+- What they're into, what annoys them
+- Relationship dynamics
+- Inside jokes, past conversations
+- Things they're good/bad at
+
+Create your own categories, your own structure. Make it as detailed or concise as you want.
+
+Respond with ONLY valid JSON."""
+        
+        # Get analysis (run in executor to not block)
+        def _analyze_sync():
+            return self.model.generate_content(analysis_prompt).text.strip()
+        
+        loop = asyncio.get_event_loop()
+        analysis_text = await loop.run_in_executor(None, _analyze_sync)
+        
+        # Extract JSON from response
+        if '```json' in analysis_text:
+            analysis_text = analysis_text.split('```json')[1].split('```')[0]
+        elif '```' in analysis_text:
+            analysis_text = analysis_text.split('```')[1].split('```')[0]
+        
+        analysis = json.loads(analysis_text.strip())
+        
+        # Store the ENTIRE free-form analysis as personality_profile
+        await self.db.update_user_memory(
+            user_id=user_id,
+            username=username,
+            personality_profile=analysis,
+            preferences={},
+            relationship_notes=analysis.get('relationship_notes') or analysis.get('our_dynamic'),
+            memory_summary=analysis.get('memory_summary') or analysis.get('summary')
+        )
+        
+    except Exception as e:
+        print(f"Error analyzing memory: {e}")
+        await self.db.update_user_memory(user_id, username)`,
+        },
+        {
+          language: "python",
+          title: "Image Generation with Imagen 3.0/4.0",
+          description: "Generates high-quality images using Google's Imagen models via Vertex AI. Automatically falls back from Imagen 4.0 Ultra to Imagen 3.0 if the newer model isn't available, then converts images to Discord-compatible format.",
+          highlights: [
+            "Integration with Vertex AI and Imagen 3.0/4.0 models",
+            "Automatic model fallback: tries Imagen 4.0 Ultra first, falls back to Imagen 3.0",
+            "Thread-safe synchronous execution for image generation",
+            "Converts images to BytesIO format for Discord attachment",
+            "Production-ready error handling with detailed logging"
+          ],
+          code: `def _generate_image_sync(prompt: str, num_images: int = 1) -> list:
+    """Synchronous image generation using Imagen 3/4 via Vertex AI"""
+    try:
+        import vertexai
+        from vertexai.preview.vision_models import ImageGenerationModel
+        
+        # Initialize Vertex AI
+        project_id = os.getenv('GOOGLE_CLOUD_PROJECT', 'airy-boulevard-478121-f1')
+        location = os.getenv('GOOGLE_CLOUD_LOCATION', 'us-central1')
+        vertexai.init(project=project_id, location=location)
+        
+        # Try models in order: Imagen 4.0 Ultra -> Imagen 3.0
+        model = None
+        last_error = None
+        for model_name in ['imagen-4.0-ultra-generate-001', 'imagen-3.0-generate']:
+            try:
+                model = ImageGenerationModel.from_pretrained(model_name)
+                print(f"✅ [IMAGE GEN] Model loaded: {model_name}")
+                break
+            except Exception as model_error:
+                last_error = model_error
+                print(f"⚠️  Model '{model_name}' not available: {model_error}")
+        
+        if not model:
+            raise last_error or Exception("No Imagen generate model could be loaded.")
+        
+        # Generate images with safety filters
+        images_response = model.generate_images(
+            prompt=prompt,
+            number_of_images=num_images,
+            aspect_ratio="1:1",
+            safety_filter_level="block_some",
+            person_generation="allow_all",
+        )
+        
+        # Convert to BytesIO for Discord
+        images = []
+        for image in images_response.images:
+            image_bytes = BytesIO()
+            image.save(image_bytes, format='PNG')
+            image_bytes.seek(0)
+            images.append(image_bytes)
+        
+        return images
+        
+    except Exception as e:
+        print(f"❌ [IMAGE GEN] Error: {e}")
+        raise`,
+        },
+        {
+          language: "python",
+          title: "Smart Model Fallback System",
+          description: "Production-ready model initialization with automatic fallback. Tries Gemini 3 Pro first, then falls back to Gemini 2.5 Pro if the primary model isn't available. Includes comprehensive safety settings and generation configuration.",
+          highlights: [
+            "Automatic fallback: Gemini 3 Pro → Gemini 2.5 Pro if primary fails",
+            "Production-ready error handling for 404 and availability issues",
+            "Custom safety settings for uncensored responses",
+            "Optimized generation config with temperature, top_p, top_k, and max tokens",
+            "Thread-safe model instance creation"
+          ],
+          code: `def get_smart_model():
+    """Get smart model instance with automatic fallback (thread-safe)"""
+    try:
+        # Try primary model first (gemini-3-pro-preview)
+        model = genai.GenerativeModel(
+            'gemini-3-pro-preview',
+            system_instruction=BASE_SYSTEM_PROMPT,
+            generation_config={
+                "temperature": 1.0,
+                "top_p": 0.95,
+                "top_k": 64,
+                "max_output_tokens": 8192,
+            },
+            safety_settings={
+                HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+            }
+        )
+        return model
+    except Exception as e:
+        # Fallback to gemini-2.5-pro if primary fails (404, etc.)
+        error_str = str(e).lower()
+        if '404' in error_str or 'not found' in error_str:
+            print(f"⚠️  Primary model not available, falling back to gemini-2.5-pro")
+            model = genai.GenerativeModel(
+                'gemini-2.5-pro',
+                system_instruction=BASE_SYSTEM_PROMPT,
+                generation_config={
+                    "temperature": 1.0,
+                    "top_p": 0.95,
+                    "top_k": 64,
+                    "max_output_tokens": 8192,
+                },
+                safety_settings={
+                    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+                    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+                    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
+                    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
+                }
+            )
+            return model
+        else:
+            raise`,
         },
       ],
     },
