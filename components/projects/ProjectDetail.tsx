@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -36,6 +36,37 @@ export default function ProjectDetail({ project }: Props) {
   const [activeImage, setActiveImage] = useState(0);
   const [activeSnippet, setActiveSnippet] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+
+  // Preload all images for instant navigation
+  useEffect(() => {
+    if (project.images && project.images.length > 0) {
+      // Preload all images using link prefetch for better Next.js optimization
+      project.images.forEach((image) => {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'image';
+        link.href = image.url;
+        document.head.appendChild(link);
+      });
+
+      // Also preload using native Image for immediate browser cache
+      project.images.forEach((image) => {
+        const img = new window.Image();
+        img.src = image.url;
+      });
+    }
+
+    // Cleanup function to remove prefetch links when component unmounts
+    return () => {
+      const prefetchLinks = document.head.querySelectorAll('link[rel="prefetch"][as="image"]');
+      prefetchLinks.forEach((link) => {
+        // Only remove links that match our project images
+        if (project.images?.some((img) => link.getAttribute('href') === img.url)) {
+          link.remove();
+        }
+      });
+    };
+  }, [project.images]);
 
   const gradient = useMemo(() => project.gradient, [project.gradient]);
   const gradientLight = useMemo(
@@ -349,6 +380,7 @@ export default function ProjectDetail({ project }: Props) {
                         sizes="(min-width: 1024px) 900px, 100vw"
                         className="object-contain"
                         priority={activeImage === 0}
+                        quality={90}
                       />
                     </motion.div>
                   </AnimatePresence>
