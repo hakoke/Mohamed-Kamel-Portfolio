@@ -206,33 +206,35 @@ export default function AiAssistant() {
               beta
             </span>
           </div>
-          <div className="mt-4 flex flex-1 flex-col min-h-[460px] max-h-[520px] sm:min-h-[520px] sm:max-h-[560px]">
+          <div className="mt-4 flex flex-1 flex-col">
             <div
               ref={chatScrollRef}
-              className="flex-1 space-y-4 overflow-y-auto pr-2"
+              className="h-[420px] overflow-y-auto pr-2 sm:h-[520px]"
             >
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
-                >
+              <div className="flex h-full flex-col justify-end gap-4">
+                {messages.map((message) => (
                   <div
-                    className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                      message.role === "assistant"
-                        ? "bg-white/10 text-gray-100"
-                        : "bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
-                    }`}
+                    key={message.id}
+                    className={`flex ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
                   >
-                    {message.content}
+                    <div
+                      className={`max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                        message.role === "assistant"
+                          ? "bg-white/10 text-gray-100"
+                          : "bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
+                      }`}
+                    >
+                      {message.content}
+                    </div>
                   </div>
-                </div>
-              ))}
-              {isThinking && (
-                <div className="flex items-center gap-2 text-sm text-gray-400">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Drafting response…
-                </div>
-              )}
+                ))}
+                {isThinking && (
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Drafting response…
+                  </div>
+                )}
+              </div>
             </div>
 
             <form
