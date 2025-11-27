@@ -42,6 +42,28 @@ export default function ProjectDetail({ project }: Props) {
     () => project.gradientLight ?? `${project.gradient}/20`,
     [project.gradient, project.gradientLight],
   );
+  const privateRepoMessage =
+    project.links.githubPrivateMessage ||
+    "Sorry, this repository is private. Reach out and I'll walk you through it live.";
+  const handlePrivateRepoAlert = () => {
+    alert(privateRepoMessage);
+  };
+  const logoBadge =
+    project.logo?.type === "image" ? (
+      <span className="relative inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+        <Image
+          src={project.logo.src}
+          alt={project.logo.alt}
+          fill
+          className="object-contain p-2"
+          sizes="64px"
+        />
+      </span>
+    ) : (
+      <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-3xl">
+        {project.logo?.src}
+      </span>
+    );
 
   return (
     <div className="relative min-h-screen bg-[#050505] text-white">
@@ -65,7 +87,7 @@ export default function ProjectDetail({ project }: Props) {
           </Link>
 
           <div className="flex items-center gap-3">
-            {project.links.github && (
+            {project.links.github ? (
               <a
                 href={project.links.github}
                 target="_blank"
@@ -75,7 +97,16 @@ export default function ProjectDetail({ project }: Props) {
                 <Github size={16} />
                 View source
               </a>
-            )}
+            ) : project.links.githubPrivateMessage ? (
+              <button
+                type="button"
+                onClick={handlePrivateRepoAlert}
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70"
+              >
+                <Github size={16} />
+                Private repo
+              </button>
+            ) : null}
             <a
               href="mailto:mykamel.cs@gmail.com"
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-pink-500/30 transition hover:opacity-90"
@@ -99,12 +130,17 @@ export default function ProjectDetail({ project }: Props) {
             />
             <div className="relative flex flex-col gap-8 md:flex-row md:items-center">
               <div className="flex flex-1 flex-col gap-4">
-                <p className="text-sm uppercase tracking-[0.4em] text-gray-300">
-                  {project.tagline}
-                </p>
-                <h1 className="text-4xl font-bold text-balance md:text-6xl">
-                  {project.title}
-                </h1>
+                <div className="flex items-center gap-4">
+                  {logoBadge}
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.4em] text-gray-300">
+                      {project.tagline}
+                    </p>
+                    <h1 className="text-4xl font-bold text-balance md:text-6xl">
+                      {project.title}
+                    </h1>
+                  </div>
+                </div>
                 <p className="text-lg text-gray-100">{project.summary}</p>
 
                 <div className="flex flex-wrap gap-3 pt-2">

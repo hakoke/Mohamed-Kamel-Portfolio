@@ -44,6 +44,7 @@ export type Project = {
   };
   links: {
     github?: string;
+    githubPrivateMessage?: string;
     demo?: string;
   };
   stack: string[];
@@ -349,7 +350,7 @@ if self.enable_tracking:
       alt: "Bespoke logo",
     },
     links: {
-      github: "https://github.com/hakoke/Bespoke",
+      githubPrivateMessage: "Sorry—this repo is private. Reach out and I'll walk you through it live.",
     },
     stack: [
       "Next.js 15",

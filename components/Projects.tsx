@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useRef } from "react";
+import { MouseEvent, useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Github } from "lucide-react";
 
@@ -25,6 +25,14 @@ export default function Projects() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
   const cards = useMemo(() => featuredProjects, []);
+  const handlePrivateRepoClick = (
+    event: MouseEvent<HTMLButtonElement>,
+    message?: string,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    alert(message || "This repository is private. Reach out for a walkthrough.");
+  };
 
   return (
     <section
@@ -88,13 +96,13 @@ export default function Projects() {
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-5">
                   {project.logo.type === "image" ? (
-                    <span className="relative inline-flex h-16 w-16 overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                    <span className="relative inline-flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5">
                       <Image
                         src={project.logo.src}
                         alt={project.logo.alt}
                         fill
-                        className="object-cover"
-                        sizes="64px"
+                        className="object-contain p-2"
+                        sizes="72px"
                         priority={idx === 0}
                       />
                     </span>
@@ -110,7 +118,7 @@ export default function Projects() {
                     </h3>
                   </div>
                 </div>
-                {project.links.github && (
+                {project.links.github ? (
                   <a
                     href={project.links.github}
                     target="_blank"
@@ -120,7 +128,17 @@ export default function Projects() {
                   >
                     <Github size={22} />
                   </a>
-                )}
+                ) : project.links.githubPrivateMessage ? (
+                  <button
+                    type="button"
+                    onClick={(event) =>
+                      handlePrivateRepoClick(event, project.links.githubPrivateMessage)
+                    }
+                    className="text-gray-500 transition-colors hover:text-white"
+                  >
+                    <Github size={22} />
+                  </button>
+                ) : null}
               </div>
 
               <p className="flex-1 text-left text-gray-300">
