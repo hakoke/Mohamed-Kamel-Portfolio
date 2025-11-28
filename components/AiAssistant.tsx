@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Bot,
@@ -182,12 +181,13 @@ export default function AiAssistant() {
             <Bot size={20} className="text-cyan-300" />
             <span>
               Need the PDF?{" "}
-              <Link
+              <a
                 href="/Mohamed_Kamel_CV.pdf"
+                download
                 className="inline-flex items-center gap-1 font-semibold text-white underline-offset-4 hover:underline"
               >
                 Download my CV <Download size={16} />
-              </Link>
+              </a>
             </span>
           </div>
         </motion.div>

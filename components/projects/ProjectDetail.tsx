@@ -37,34 +37,57 @@ export default function ProjectDetail({ project }: Props) {
   const [activeSnippet, setActiveSnippet] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
+  // Preload adjacent images when activeImage changes
+  useEffect(() => {
+    if (typeof window === 'undefined' || !project.images || project.images.length <= 1) {
+      return;
+    }
+
+    // Preload next and previous images
+    const nextIndex = (activeImage + 1) % project.images.length;
+    const prevIndex = activeImage === 0 ? project.images.length - 1 : activeImage - 1;
+
+    [nextIndex, prevIndex].forEach((idx) => {
+      const img = new window.Image();
+      img.src = project.images[idx].url;
+    });
+  }, [activeImage, project.images]);
+
   // Preload all images for instant navigation
   useEffect(() => {
-    if (project.images && project.images.length > 0) {
-      // Preload all images using link prefetch for better Next.js optimization
-      project.images.forEach((image) => {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.as = 'image';
-        link.href = image.url;
-        document.head.appendChild(link);
-      });
+    if (typeof window === 'undefined' || !project.images || project.images.length === 0) {
+      return;
+    }
 
-      // Also preload using native Image for immediate browser cache
-      project.images.forEach((image) => {
+    // Preload all images aggressively using native Image API for immediate browser cache
+    const imagePromises = project.images.map((image) => {
+      return new Promise<void>((resolve) => {
         const img = new window.Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve(); // Resolve even on error to not block
         img.src = image.url;
       });
-    }
+    });
+
+    // Also use link prefetch for Next.js optimization (only on client)
+    project.images.forEach((image) => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = 'image';
+      link.href = image.url;
+      document.head.appendChild(link);
+    });
 
     // Cleanup function to remove prefetch links when component unmounts
     return () => {
-      const prefetchLinks = document.head.querySelectorAll('link[rel="prefetch"][as="image"]');
-      prefetchLinks.forEach((link) => {
-        // Only remove links that match our project images
-        if (project.images?.some((img) => link.getAttribute('href') === img.url)) {
-          link.remove();
-        }
-      });
+      if (typeof document !== 'undefined') {
+        const prefetchLinks = document.head.querySelectorAll('link[rel="prefetch"][as="image"]');
+        prefetchLinks.forEach((link) => {
+          if (project.images?.some((img) => link.getAttribute('href') === img.url)) {
+            link.remove();
+          }
+        });
+      }
     };
   }, [project.images]);
 
@@ -370,7 +393,7 @@ export default function ProjectDetail({ project }: Props) {
                       initial={{ opacity: 0, scale: 0.98 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 1.02 }}
-                      transition={{ duration: 0.4 }}
+                      transition={{ duration: 0.3 }}
                       className="absolute inset-0"
                     >
                       <Image
@@ -380,7 +403,9 @@ export default function ProjectDetail({ project }: Props) {
                         sizes="(min-width: 1024px) 900px, 100vw"
                         className="object-contain"
                         priority={activeImage === 0}
-                        quality={90}
+                        quality={85}
+                        loading={activeImage === 0 ? "eager" : "lazy"}
+                        unoptimized={false}
                       />
                     </motion.div>
                   </AnimatePresence>
