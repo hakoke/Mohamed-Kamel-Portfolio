@@ -513,13 +513,13 @@ export default function ProjectDetail({ project }: Props) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 overflow-hidden"
               onClick={() => setExpandedImage(null)}
             >
               <button
                 type="button"
                 onClick={() => setExpandedImage(null)}
-                className="absolute top-4 right-4 z-10 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+                className="absolute top-4 right-4 z-20 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
                 aria-label="Close"
               >
                 <X size={24} />
@@ -529,20 +529,31 @@ export default function ProjectDetail({ project }: Props) {
                 className="relative max-h-[90vh] max-w-[90vw] w-full h-full"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Image
-                  src={project.images[expandedImage].url}
-                  alt={project.images[expandedImage].alt}
-                  fill
-                  sizes="90vw"
-                  className="object-contain"
-                  quality={95}
-                  priority
-                />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={project.images[expandedImage].url}
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={project.images[expandedImage].url}
+                      alt={project.images[expandedImage].alt}
+                      fill
+                      sizes="90vw"
+                      className="object-contain"
+                      quality={95}
+                      priority
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </div>
               
               {/* Image info in modal */}
               <div 
-                className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 rounded-2xl px-6 py-4 max-w-2xl text-center"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 rounded-2xl px-6 py-4 max-w-2xl text-center z-10"
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="text-lg font-semibold text-white">
@@ -563,10 +574,10 @@ export default function ProjectDetail({ project }: Props) {
                       setExpandedImage(newIndex);
                       setActiveImage(newIndex);
                     }}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/10 p-2 sm:p-3 text-white transition hover:bg-white/20"
                     aria-label="Previous image"
                   >
-                    <ArrowLeft size={24} />
+                    <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
                   </button>
                   <button
                     type="button"
@@ -576,10 +587,10 @@ export default function ProjectDetail({ project }: Props) {
                       setExpandedImage(newIndex);
                       setActiveImage(newIndex);
                     }}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/10 p-2 sm:p-3 text-white transition hover:bg-white/20"
                     aria-label="Next image"
                   >
-                    <ArrowRight size={24} />
+                    <ArrowRight size={20} className="sm:w-6 sm:h-6" />
                   </button>
                 </>
               )}
@@ -722,13 +733,13 @@ export default function ProjectDetail({ project }: Props) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 overflow-hidden"
               onClick={() => setExpandedCode(false)}
             >
               <button
                 type="button"
                 onClick={() => setExpandedCode(false)}
-                className="absolute top-4 right-4 z-10 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+                className="absolute top-4 right-4 z-20 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
                 aria-label="Close"
               >
                 <X size={24} />
@@ -738,79 +749,74 @@ export default function ProjectDetail({ project }: Props) {
                 className="relative max-h-[90vh] max-w-5xl w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-white/10 p-6 overflow-auto"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center justify-between gap-4 mb-4">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.3em] text-gray-400">
-                      {project.codeSnippets[activeSnippet].language}
-                    </p>
-                    <h3 className="text-2xl font-semibold text-white">
-                      {project.codeSnippets[activeSnippet].title}
-                    </h3>
-                  </div>
-                </div>
-                
-                {project.codeSnippets[activeSnippet].description && (
-                  <p className="mb-4 text-gray-300">
-                    {project.codeSnippets[activeSnippet].description}
-                  </p>
-                )}
-
-                <pre className="rounded-2xl border border-white/5 bg-black/70 p-6 text-sm text-green-300 overflow-auto">
-                  <code className="block whitespace-pre">
-                    {project.codeSnippets[activeSnippet].code.trim()}
-                  </code>
-                </pre>
-
-                {project.codeSnippets.length > 1 && (
-                  <>
-                    <div className="mt-6 flex justify-center gap-2">
-                      {project.codeSnippets.map((snippet, idx) => (
-                        <button
-                          type="button"
-                          key={snippet.title}
-                          onClick={() => setActiveSnippet(idx)}
-                          className={`h-2 w-8 rounded-full transition ${
-                            idx === activeSnippet
-                              ? "bg-gradient-to-r from-pink-500 to-cyan-500"
-                              : "bg-white/20 hover:bg-white/40"
-                          }`}
-                        />
-                      ))}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={project.codeSnippets[activeSnippet].title}
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -40 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <div className="flex items-center justify-between gap-4 mb-4">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-gray-400">
+                          {project.codeSnippets[activeSnippet].language}
+                        </p>
+                        <h3 className="text-2xl font-semibold text-white">
+                          {project.codeSnippets[activeSnippet].title}
+                        </h3>
+                      </div>
                     </div>
                     
-                    <div className="mt-4 flex justify-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveSnippet((prev) =>
-                            prev === 0
-                              ? project.codeSnippets.length - 1
-                              : prev - 1,
-                          )
-                        }
-                        className="rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
-                        aria-label="Previous snippet"
-                      >
-                        <ArrowLeft size={20} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setActiveSnippet((prev) =>
-                            prev === project.codeSnippets.length - 1
-                              ? 0
-                              : prev + 1,
-                          )
-                        }
-                        className="rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
-                        aria-label="Next snippet"
-                      >
-                        <ArrowRight size={20} />
-                      </button>
-                    </div>
-                  </>
-                )}
+                    {project.codeSnippets[activeSnippet].description && (
+                      <p className="mb-4 text-gray-300">
+                        {project.codeSnippets[activeSnippet].description}
+                      </p>
+                    )}
+
+                    <pre className="rounded-2xl border border-white/5 bg-black/70 p-6 text-sm text-green-300 overflow-auto">
+                      <code className="block whitespace-pre">
+                        {project.codeSnippets[activeSnippet].code.trim()}
+                      </code>
+                    </pre>
+                  </motion.div>
+                </AnimatePresence>
               </div>
+
+              {project.codeSnippets.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveSnippet((prev) =>
+                        prev === 0
+                          ? project.codeSnippets.length - 1
+                          : prev - 1,
+                      );
+                    }}
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/10 p-2 sm:p-3 text-white transition hover:bg-white/20"
+                    aria-label="Previous snippet"
+                  >
+                    <ArrowLeft size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveSnippet((prev) =>
+                        prev === project.codeSnippets.length - 1
+                          ? 0
+                          : prev + 1,
+                      );
+                    }}
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/10 p-2 sm:p-3 text-white transition hover:bg-white/20"
+                    aria-label="Next snippet"
+                  >
+                    <ArrowRight size={20} className="sm:w-6 sm:h-6" />
+                  </button>
+                </>
+              )}
             </motion.div>
           )}
 
