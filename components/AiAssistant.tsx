@@ -12,6 +12,46 @@ import {
   Zap,
 } from "lucide-react";
 
+// Helper function to convert CV references to clickable links
+function renderMessageWithLinks(content: string) {
+  // Pattern to match CV references: /Mohamed_Kamel_CV.pdf, Mohamed_Kamel_CV.pdf, or CV references
+  const cvPattern = /(\/)?Mohamed_Kamel_CV\.pdf|Mohamed_Kamel_CV(?=\s|$|,|\.|")/gi;
+  
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
+  let match;
+  let linkIndex = 0;
+
+  while ((match = cvPattern.exec(content)) !== null) {
+    // Add text before the match
+    if (match.index > lastIndex) {
+      parts.push(content.slice(lastIndex, match.index));
+    }
+
+    // Create clickable link
+    parts.push(
+      <a
+        key={`cv-link-${linkIndex++}`}
+        href="/Mohamed_Kamel_CV.pdf"
+        download
+        className="inline-flex items-center gap-1 font-semibold text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors"
+      >
+        Mohamed_Kamel_CV
+        <Download size={14} className="inline" />
+      </a>
+    );
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  // Add remaining text
+  if (lastIndex < content.length) {
+    parts.push(content.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? <>{parts}</> : content;
+}
+
 type ChatMessage = {
   id: string;
   role: "assistant" | "user";
@@ -221,7 +261,9 @@ export default function AiAssistant() {
                         : "bg-gradient-to-r from-pink-500 to-cyan-500 text-white"
                     }`}
                   >
-                    {message.content}
+                    {message.role === "assistant"
+                      ? renderMessageWithLinks(message.content)
+                      : message.content}
                   </div>
                 </div>
               ))}
