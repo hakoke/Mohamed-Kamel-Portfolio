@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center justify-center px-4"
+      className="relative flex min-h-screen flex-col items-center justify-center px-4 pb-20 pt-32 scroll-mt-28 sm:pb-24 sm:pt-36 sm:scroll-mt-32 md:pb-0 md:pt-0"
     >
       <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
         <motion.div
@@ -15,22 +15,20 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-5xl font-bold md:text-7xl">
+          <h1 className="text-4xl font-bold leading-tight sm:text-5xl md:text-7xl">
             Hi, I&apos;m{" "}
             <span className="bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 bg-clip-text text-transparent">
               Mohamed Kamel
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-3xl text-lg text-gray-300 leading-relaxed">
-            I turn ambiguous ideas into production software. My happy place is
-            blending full-stack craft with computer vision, LLM ops, and the
-            glue that makes teams trust the data they see. If a feature needs
-            design polish, GPU inference, or a careful rollout plan, I stay with
-            it until it ships. (You can also quiz my new AI wingman below.)
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-gray-300 sm:text-lg">
+          I like to learns by doing. I pick up new skills fast, take on challenges I’ve never tried before and keep trying until things work.
+          Most of my projects started with “I don’t know this yet" and that’s what I enjoy the most, experimenting with new stuff,
+          improving and turning ideas into real, production level software.
           </p>
 
-          <div className="mt-10 mb-12 flex gap-4 justify-center">
+          <div className="mt-8 mb-10 flex w-full flex-wrap justify-center gap-4 sm:mt-10 sm:mb-12">
             <a
               href="https://github.com/hakoke"
               target="_blank"
@@ -47,10 +45,10 @@ export default function Hero() {
             </a>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-6">
+          <div className="flex w-full flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6">
             <a
               href="#projects"
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 px-8 py-4 font-semibold shadow-lg shadow-pink-500/50 transition-all hover:scale-105 hover:opacity-90"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 px-8 py-4 font-semibold shadow-lg shadow-pink-500/50 transition-all hover:scale-105 hover:opacity-90 sm:w-auto"
             >
               View Projects
               <ArrowDown size={20} />
@@ -58,7 +56,7 @@ export default function Hero() {
             <a
               href="/Mohamed_Kamel_CV.pdf"
               download
-              className="inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/5 px-8 py-4 font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/20 bg-white/5 px-8 py-4 font-semibold text-white transition-all hover:border-white/50 hover:bg-white/10 sm:w-auto"
             >
               Download CV
               <Download size={18} />
@@ -70,7 +68,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mt-16 grid w-full gap-4 text-left sm:grid-cols-3"
+          className="mt-12 grid w-full gap-4 text-left sm:mt-16 sm:grid-cols-2 lg:grid-cols-3"
         >
           {[
             { label: "Products shipped", value: "3 builds" },

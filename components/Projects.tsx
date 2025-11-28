@@ -48,7 +48,7 @@ export default function Projects() {
       <section
         id="projects"
         ref={sectionRef}
-        className="relative overflow-hidden bg-gradient-to-b from-transparent via-purple-900/10 to-transparent py-24 px-4"
+        className="relative overflow-hidden bg-gradient-to-b from-transparent via-purple-900/10 to-transparent py-24 px-4 scroll-mt-28 sm:scroll-mt-32"
       >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-pink-500/10 to-rose-500/10 blur-3xl" />
@@ -84,8 +84,8 @@ export default function Projects() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mx-auto mt-6 max-w-3xl text-lg text-gray-300"
         >
-          I gravitate toward projects that blend real users, real data, and real
-          constraints. These are the builds I&apos;m most proud of.
+          I like to work onprojects that involve real people and real problems. 
+          Each one of these pushed me to learn something new and build something that actually works in the real world.
         </motion.p>
       </div>
 

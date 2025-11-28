@@ -111,7 +111,7 @@ export default function AiAssistant() {
   return (
     <section
       id="ai"
-      className="relative overflow-hidden bg-gradient-to-b from-transparent via-indigo-900/20 to-transparent py-24 px-4"
+      className="relative overflow-hidden bg-gradient-to-b from-transparent via-indigo-900/20 to-transparent py-24 px-4 scroll-mt-28 sm:scroll-mt-32"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/3 top-12 h-64 w-64 rounded-full bg-gradient-to-r from-pink-500/20 to-purple-500/20 blur-3xl" />
@@ -133,10 +133,9 @@ export default function AiAssistant() {
             Ask anything about my builds, stack, or thought process.
           </h2>
           <p className="mt-4 text-gray-200">
-            Gemini 2.0 Flash has real context on my flagship projects,
-            architecture diagrams, CV, and problem-solving style. Treat it like
-            a personal demo teammate—you can drill into safety systems, resume
-            automation, Discord bots, or the way I approach new AI briefs.
+            Gemini 2.0 Flash has real context on my projects,
+            diagrams, CV, and how I solve problems. Think of it as a teammate that knows my work.
+            you can ask about SafeOps, Bespoke, ServerMate, or how I approach new AI challenges.
           </p>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
@@ -146,8 +145,7 @@ export default function AiAssistant() {
                 Context aware replies
               </div>
               <p className="mt-2 text-sm text-gray-300">
-                Knows my stack, timelines, and metrics pulled straight from this
-                repo—so answers don&apos;t sound generic.
+                It gives context aware replies based on this repo, so the answers don’t feel generic.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
@@ -156,8 +154,8 @@ export default function AiAssistant() {
                 Gemini 2.0 Flash
               </div>
               <p className="mt-2 text-sm text-gray-300">
-                Ultra-low latency model with a temperature tuned for clear,
-                grounded responses (no fluff, no hallucinations).
+                It runs on Gemini 2.0 Flash, a low-latency model tuned for clear, 
+                grounded responses without fluff or hallucinations.
               </p>
             </div>
           </div>
