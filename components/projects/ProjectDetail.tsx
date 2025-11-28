@@ -40,6 +40,10 @@ export default function ProjectDetail({ project }: Props) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [expandedImage, setExpandedImage] = useState<number | null>(null);
   const [expandedCode, setExpandedCode] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchEndY, setTouchEndY] = useState<number | null>(null);
 
   // Preload adjacent images when activeImage changes
   useEffect(() => {
@@ -78,6 +82,86 @@ export default function ProjectDetail({ project }: Props) {
       document.body.style.overflow = '';
     };
   }, [expandedImage, expandedCode]);
+
+  // Swipe gesture handlers
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.targetTouches[0];
+    setTouchEnd(null);
+    setTouchEndY(null);
+    setTouchStart(touch.clientX);
+    setTouchStartY(touch.clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    const touch = e.targetTouches[0];
+    setTouchEnd(touch.clientX);
+    setTouchEndY(touch.clientY);
+  };
+
+  const onTouchEnd = (type: 'image' | 'code') => {
+    if (!touchStart || !touchEnd || touchStartY === null || touchEndY === null) {
+      // Reset on incomplete touch
+      setTouchStart(null);
+      setTouchEnd(null);
+      setTouchStartY(null);
+      setTouchEndY(null);
+      return;
+    }
+    
+    const distanceX = touchStart - touchEnd;
+    const distanceY = touchStartY - touchEndY;
+    
+    // Only trigger swipe if horizontal movement is greater than vertical (horizontal swipe)
+    if (Math.abs(distanceY) > Math.abs(distanceX)) {
+      // This was a vertical scroll, not a horizontal swipe
+      setTouchStart(null);
+      setTouchEnd(null);
+      setTouchStartY(null);
+      setTouchEndY(null);
+      return;
+    }
+    
+    const isLeftSwipe = distanceX > minSwipeDistance;
+    const isRightSwipe = distanceX < -minSwipeDistance;
+
+    if (type === 'image' && expandedImage !== null) {
+      if (isLeftSwipe && project.images.length > 1) {
+        // Swipe left - next image
+        const newIndex = expandedImage === project.images.length - 1 ? 0 : expandedImage + 1;
+        setExpandedImage(newIndex);
+        setActiveImage(newIndex);
+      }
+      if (isRightSwipe && project.images.length > 1) {
+        // Swipe right - previous image
+        const newIndex = expandedImage === 0 ? project.images.length - 1 : expandedImage - 1;
+        setExpandedImage(newIndex);
+        setActiveImage(newIndex);
+      }
+    }
+
+    if (type === 'code' && expandedCode && project.codeSnippets.length > 1) {
+      if (isLeftSwipe) {
+        // Swipe left - next snippet
+        setActiveSnippet((prev) =>
+          prev === project.codeSnippets.length - 1 ? 0 : prev + 1
+        );
+      }
+      if (isRightSwipe) {
+        // Swipe right - previous snippet
+        setActiveSnippet((prev) =>
+          prev === 0 ? project.codeSnippets.length - 1 : prev - 1
+        );
+      }
+    }
+
+    // Reset touch state
+    setTouchStart(null);
+    setTouchEnd(null);
+    setTouchStartY(null);
+    setTouchEndY(null);
+  };
 
   // Preload all images for instant navigation
   useEffect(() => {
@@ -515,6 +599,9 @@ export default function ProjectDetail({ project }: Props) {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 overflow-hidden"
               onClick={() => setExpandedImage(null)}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={() => onTouchEnd('image')}
             >
               <button
                 type="button"
@@ -525,10 +612,7 @@ export default function ProjectDetail({ project }: Props) {
                 <X size={24} />
               </button>
               
-              <div 
-                className="relative max-h-[90vh] max-w-[90vw] w-full h-full"
-                onClick={(e) => e.stopPropagation()}
-              >
+              <div className="relative max-h-[90vh] max-w-[90vw] w-full h-full pointer-events-none">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={project.images[expandedImage].url}
@@ -536,7 +620,8 @@ export default function ProjectDetail({ project }: Props) {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 1.02 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute inset-0"
+                    className="absolute inset-0 pointer-events-auto"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     <Image
                       src={project.images[expandedImage].url}
@@ -553,7 +638,7 @@ export default function ProjectDetail({ project }: Props) {
               
               {/* Image info in modal */}
               <div 
-                className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 rounded-2xl px-6 py-4 max-w-2xl text-center z-10"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 rounded-2xl px-6 py-4 max-w-2xl text-center z-10 pointer-events-auto"
                 onClick={(e) => e.stopPropagation()}
               >
                 <h3 className="text-lg font-semibold text-white">
@@ -735,6 +820,9 @@ export default function ProjectDetail({ project }: Props) {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 overflow-hidden"
               onClick={() => setExpandedCode(false)}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={() => onTouchEnd('code')}
             >
               <button
                 type="button"
