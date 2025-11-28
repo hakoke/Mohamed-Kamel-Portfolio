@@ -8,6 +8,16 @@ import { ArrowRight, Github } from "lucide-react";
 
 import { featuredProjects } from "@/data/projects";
 
+// CSS for GitHub icon hover tooltip isolation
+const githubIconStyles = `
+  .github-wrapper {
+    isolation: isolate;
+  }
+  .github-wrapper:hover .github-tooltip {
+    opacity: 1 !important;
+  }
+`;
+
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: (idx: number) => ({
@@ -33,11 +43,13 @@ export default function Projects() {
   };
 
   return (
-    <section
-      id="projects"
-      ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-b from-transparent via-purple-900/10 to-transparent py-24 px-4"
-    >
+    <>
+      <style>{githubIconStyles}</style>
+      <section
+        id="projects"
+        ref={sectionRef}
+        className="relative overflow-hidden bg-gradient-to-b from-transparent via-purple-900/10 to-transparent py-24 px-4"
+      >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-pink-500/10 to-rose-500/10 blur-3xl" />
         <div className="absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-cyan-500/10 to-blue-500/10 blur-3xl" />
@@ -119,29 +131,35 @@ export default function Projects() {
                   </div>
                 </div>
                 {project.links.github ? (
-                  <a
-                    href={project.links.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="relative group text-gray-400 transition-colors hover:text-white"
+                  <div
+                    className="relative github-wrapper"
                     onClick={(event) => event.stopPropagation()}
                   >
-                    <Github size={22} />
-                    <span className="pointer-events-none absolute -bottom-9 left-1/2 z-10 w-max -translate-x-1/2 rounded-md bg-black/80 px-2.5 py-1 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                    <a
+                      href={project.links.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex text-gray-400 transition-colors hover:text-white"
+                    >
+                      <Github size={22} />
+                    </a>
+                    <span className="github-tooltip pointer-events-none absolute -bottom-9 left-1/2 z-10 w-max -translate-x-1/2 rounded-md bg-black/80 px-2.5 py-1 text-xs text-white opacity-0 transition">
                       View source
                     </span>
-                  </a>
+                  </div>
                 ) : project.links.githubPrivateMessage ? (
-                  <button
-                    type="button"
-                    onClick={handlePrivateRepoClick}
-                    className="relative group text-gray-500 transition-colors hover:text-white"
-                  >
-                    <Github size={22} />
-                    <span className="pointer-events-none absolute -bottom-14 left-1/2 z-10 w-48 -translate-x-1/2 rounded-md bg-black/80 px-3 py-2 text-xs text-white opacity-0 transition group-hover:opacity-100">
+                  <div className="relative github-wrapper">
+                    <button
+                      type="button"
+                      onClick={handlePrivateRepoClick}
+                      className="inline-flex text-gray-500 transition-colors hover:text-white"
+                    >
+                      <Github size={22} />
+                    </button>
+                    <span className="github-tooltip pointer-events-none absolute -bottom-14 left-1/2 z-10 w-48 -translate-x-1/2 rounded-md bg-black/80 px-3 py-2 text-xs text-white opacity-0 transition">
                       {project.links.githubPrivateMessage}
                     </span>
-                  </button>
+                  </div>
                 ) : null}
               </div>
 
@@ -193,5 +211,6 @@ export default function Projects() {
         ))}
       </div>
     </section>
+    </>
   );
 }
