@@ -23,8 +23,8 @@ export default function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-gray-300 sm:text-lg">
-          I like to learns by doing. I pick up new skills fast, take on challenges I’ve never tried before and keep trying until things work.
-          Most of my projects started with “I don’t know this yet" and that’s what I enjoy the most, experimenting with new stuff,
+          I like to learns by doing. I pick up new skills fast, take on challenges I&apos;ve never tried before and keep trying until things work.
+          Most of my projects started with &quot;I don&apos;t know this yet&quot; and that&apos;s what I enjoy the most, experimenting with new stuff,
           improving and turning ideas into real, production level software.
           </p>
 
