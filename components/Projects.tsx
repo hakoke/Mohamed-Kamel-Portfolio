@@ -84,7 +84,7 @@ export default function Projects() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mx-auto mt-6 max-w-3xl text-lg text-gray-300"
         >
-          I like to work onprojects that involve real people and real problems. 
+          I like to work on projects that involve real people and real problems. 
           Each one of these pushed me to learn something new and build something that actually works in the real world.
         </motion.p>
       </div>

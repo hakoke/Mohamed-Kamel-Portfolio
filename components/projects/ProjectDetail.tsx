@@ -451,24 +451,26 @@ export default function ProjectDetail({ project }: Props) {
                       <button
                         type="button"
                         aria-label="Previous image"
-                        className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/70 p-3 text-white transition hover:bg-black/90"
-                        onClick={() =>
+                        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/70 p-3 text-white transition hover:bg-black/90"
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setActiveImage((prev) =>
                             prev === 0 ? project.images.length - 1 : prev - 1,
-                          )
-                        }
+                          );
+                        }}
                       >
                         <ArrowLeft size={20} />
                       </button>
                       <button
                         type="button"
                         aria-label="Next image"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/70 p-3 text-white transition hover:bg-black/90"
-                        onClick={() =>
+                        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-black/70 p-3 text-white transition hover:bg-black/90"
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setActiveImage((prev) =>
                             prev === project.images.length - 1 ? 0 : prev + 1,
-                          )
-                        }
+                          );
+                        }}
                       >
                         <ArrowRight size={20} />
                       </button>
