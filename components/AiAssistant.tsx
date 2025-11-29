@@ -212,25 +212,38 @@ function formatInlineMarkdown(
   return parts.length > 0 ? parts : formatBoldItalic(text, 0);
 }
 
-// Helper function to format bold and italic
+// Helper function to format bold, italic, and URLs
 function formatBoldItalic(text: string, startKey: number): (string | JSX.Element)[] {
   const parts: (string | JSX.Element)[] = [];
-  let remaining = text;
   let keyIndex = startKey;
   
-  // Process **bold** and *italic* (in that order to avoid conflicts)
+  // Process URLs first (before bold/italic to avoid conflicts)
+  // Matches http://, https://, and www. URLs
+  const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+|www\.[^\s<>"{}|\\^`\[\]]+)/gi;
+  const urlMatches: Array<{ start: number; end: number; url: string }> = [];
+  
+  let match;
+  urlRegex.lastIndex = 0;
+  while ((match = urlRegex.exec(text)) !== null) {
+    urlMatches.push({
+      start: match.index,
+      end: match.index + match[0].length,
+      url: match[0],
+    });
+  }
+  
+  // Process **bold** and *italic*
   const patterns = [
     { regex: /\*\*([^*]+)\*\*/g, component: (content: string, key: number) => <strong key={key}>{content}</strong> },
     { regex: /\*([^*]+)\*/g, component: (content: string, key: number) => <em key={key}>{content}</em> },
   ];
   
-  const matches: Array<{ start: number; end: number; content: string; type: 'bold' | 'italic' }> = [];
+  const formatMatches: Array<{ start: number; end: number; content: string; type: 'bold' | 'italic' }> = [];
   
   patterns.forEach(({ regex }, typeIndex) => {
     regex.lastIndex = 0;
-    let match;
     while ((match = regex.exec(text)) !== null) {
-      matches.push({
+      formatMatches.push({
         start: match.index,
         end: match.index + match[0].length,
         content: match[1],
@@ -239,10 +252,17 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
     }
   });
   
-  // Sort by position and remove overlaps (bold takes priority)
-  matches.sort((a, b) => a.start - b.start);
-  const nonOverlapping: typeof matches = [];
-  for (const match of matches) {
+  // Combine all matches and sort by position
+  const allMatches: Array<{ start: number; end: number; type: 'url' | 'bold' | 'italic'; content?: string; url?: string }> = [
+    ...urlMatches.map(m => ({ ...m, type: 'url' as const, url: m.url })),
+    ...formatMatches.map(m => ({ ...m, type: m.type, content: m.content })),
+  ];
+  
+  allMatches.sort((a, b) => a.start - b.start);
+  
+  // Remove overlaps (URLs take priority, then bold, then italic)
+  const nonOverlapping: typeof allMatches = [];
+  for (const match of allMatches) {
     const overlaps = nonOverlapping.some(
       (existing) => !(match.end <= existing.start || match.start >= existing.end)
     );
@@ -257,8 +277,25 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
     if (match.start > lastIndex) {
       parts.push(text.slice(lastIndex, match.start));
     }
-    const Component = patterns[match.type === 'bold' ? 0 : 1].component;
-    parts.push(Component(match.content, keyIndex++));
+    
+    if (match.type === 'url') {
+      // Make URL clickable and blue
+      const url = match.url!.startsWith('www.') ? `https://${match.url}` : match.url!;
+      parts.push(
+        <a
+          key={`url-${keyIndex++}`}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors"
+        >
+          {match.url}
+        </a>
+      );
+    } else {
+      const Component = patterns[match.type === 'bold' ? 0 : 1].component;
+      parts.push(Component(match.content!, keyIndex++));
+    }
     lastIndex = match.end;
   });
   
