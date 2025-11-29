@@ -12,8 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "weekly",
       priority: 1,
-    },
-    ...projectSlugs.map((slug) => ({
+    } satisfies MetadataRoute.Sitemap[number],
+    ...projectSlugs.map<MetadataRoute.Sitemap[number]>((slug) => ({
       url: `${baseUrl}/projects/${slug}`,
       lastModified,
       changeFrequency: "monthly",
