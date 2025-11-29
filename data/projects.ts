@@ -46,6 +46,7 @@ export type Project = {
     github?: string;
     githubPrivateMessage?: string;
     demo?: string;
+    website?: string;
   };
   stack: string[];
   overview: string;
@@ -194,21 +195,21 @@ export const projects: Project[] = [
         alt: "Attendance Management",
         title: "Live Attendance Ledger",
         description:
-          "Automatic entry/exit timestamps plus rolling duration counters keep HR aligned with what the cameras see.",
+          "Automatic entry/exit logging and live duration tracking keep HR synced with what the cameras see, no manual check-ins needed.",
       },
       {
         url: "/safeops3.jpg",
         alt: "Employee Location Tracking",
         title: "Find Anyone Fast",
         description:
-          "Click an employee ID to see their latest camera detection and timestamp—no radios, no guessing.",
+          "Click an employee ID to see their latest camera detection and timestamp.",
       },
       {
         url: "/SafeOpsDatabase.jpg",
         alt: "MongoDB Architecture",
         title: "Production Database Topology",
         description:
-          "Ten collections power attendance, violations, schedules, and warehouse segmentation in MongoDB Atlas.",
+          "The system runs on ten MongoDB collections that handle attendance, violations, schedules, and all warehouse-related data.",
       },
     ],
     codeSnippets: [
@@ -351,6 +352,7 @@ if self.enable_tracking:
     },
     links: {
       githubPrivateMessage: "Sorry—this repo is private. Reach out and I'll walk you through it live.",
+      website: "https://bespoke-ae.com/",
     },
     stack: [
       "Next.js 15",
@@ -383,7 +385,7 @@ if self.enable_tracking:
       "Keeping database queries snappy across memory, knowledge, chat history, and profiles",
     ],
     results:
-      "Resume ingestion now takes minutes, not hours. Clients can talk through complex requirements like a real PM, while AI suggests services, talent matches, and pricing in one flow.",
+      "Resume ingestion now takes minutes, not hours. Clients can talk through complex requirements like a real PM, while AI suggests services, talent matches, and pricing in one flow. The platform is live at bespoke-ae.com with Railway hosting behind Cloudflare, the GoDaddy-managed domain, and indexing handled via Google Search Console.",
     demoVideo: null,
     images: [
       {
@@ -405,7 +407,7 @@ if self.enable_tracking:
         alt: "Service catalog",
         title: "Searchable Service Catalog",
         description:
-          "100+ services across Architecture, Engineering, and Specialty verticals with filters and fuzzy search.",
+          "100+ services across Architecture, Engineering, Specialty and Project Management cateogries with filters and fuzzy search.",
       },
       {
         url: "/bespoke/talent-dashboard.jpg",
@@ -419,7 +421,7 @@ if self.enable_tracking:
         alt: "Talent profile management",
         title: "Profile Editor",
         description:
-          "Sidebar navigation keeps long-form profile editing manageable while AI drafts narratives and rates.",
+          "Profile management keeps long-form profile editing manageable and fully editable",
       },
     ],
     codeSnippets: [
@@ -483,7 +485,7 @@ const stream = new ReadableStream<Uint8Array>({
         language: "typescript",
         title: "Fuzzy Service Matching",
         description:
-          "Maps user language to precise catalog services using aliases and regex patterns.",
+          "Maps user text to the correct service by checking aliases, regex patterns, and known service names, then normalizes and deduplicates the results.",
         highlights: [
           "Keyword + regex alias dictionary",
           "Direct lookup map for fast paths",
@@ -544,9 +546,9 @@ if (band) {
       { label: "AI Models", value: "4", detail: "Flash + Pro routing" },
     ],
     heroHighlights: [
+      "Live at bespoke-ae.com (Railway + Cloudflare + GoDaddy + Google Search Console)",
       "Streaming RFP assistant with multi-model routing",
       "Resume automation with strict anti-hallucination guardrails",
-      "Fuzzy service catalog + pricing intelligence",
     ],
     featured: true,
   },

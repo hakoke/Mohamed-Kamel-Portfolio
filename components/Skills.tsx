@@ -27,7 +27,7 @@ export default function Skills() {
     },
     {
       category: "Cloud & DevOps",
-      skills: ["AWS EC2", "AWS S3", "Docker", "Railway"],
+      skills: ["AWS EC2", "AWS S3", "Docker", "Railway", "Cloudflare", "Google Search Console", "GoDaddy DNS"],
     },
     {
       category: "Cybersecurity",

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MouseEvent, useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Github } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Github } from "lucide-react";
 
 import { featuredProjects } from "@/data/projects";
 
@@ -166,6 +166,19 @@ export default function Projects() {
               <p className="flex-1 text-left text-gray-300">
                 {project.summary}
               </p>
+
+              {project.links.website && (
+                <a
+                  href={project.links.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/30 px-3 py-1 text-xs font-semibold text-cyan-200 transition hover:border-cyan-200 hover:text-white"
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  Visit site
+                  <ArrowUpRight size={12} />
+                </a>
+              )}
 
               <div className="flex flex-wrap gap-2 text-left">
                 {project.stack.slice(0, 4).map((tech) => (
