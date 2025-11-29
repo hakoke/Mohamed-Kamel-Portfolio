@@ -13,22 +13,86 @@ import {
 } from "lucide-react";
 
 // Helper function to convert CV references to clickable links
+// AI-driven: Only matches when AI explicitly references the CV file (markdown links or file paths)
+// This is dynamic - the AI controls when to reference CV by using markdown format
 function renderMessageWithLinks(content: string) {
-  // Pattern to match CV references: /Mohamed_Kamel_CV.pdf, Mohamed_Kamel_CV.pdf, or CV references
-  const cvPattern = /(\/)?Mohamed_Kamel_CV\.pdf|Mohamed_Kamel_CV(?=\s|$|,|\.|")/gi;
+  // Only match explicit CV file references (AI-driven, not hardcoded word matching):
+  // - Markdown links: [text](/Mohamed_Kamel_CV.pdf) - AI uses this format when it wants to reference CV
+  // - Full file paths: /Mohamed_Kamel_CV.pdf or Mohamed_Kamel_CV.pdf - explicit file references
+  // - Full name with file context: Mohamed_Kamel_CV when clearly a file reference
+  const cvPatterns = [
+    // Markdown links: [text](/Mohamed_Kamel_CV.pdf) - AI uses this when it wants to reference CV
+    {
+      pattern: /\[([^\]]*)\]\(\/?Mohamed[_\s\\]*Kamel[_\s\\]*CV[_\s\\]*\.pdf\)/gi,
+      isMarkdown: true,
+    },
+    // Full file path references: /Mohamed_Kamel_CV.pdf or Mohamed_Kamel_CV.pdf (explicit file reference)
+    {
+      pattern: /\/?Mohamed[_\s\\]*Kamel[_\s\\]*CV[_\s\\]*\.pdf/gi,
+      isMarkdown: false,
+    },
+    // Full name when it's clearly a file/document reference (followed by file-related context)
+    {
+      pattern: /Mohamed[_\s\\]*Kamel[_\s\\]*CV(?=\s+(?:at|here|below|above|file|PDF|pdf|downloadable|available|link|download|document|is\s+available|can\s+be|will\s+be)|$)/gi,
+      isMarkdown: false,
+    },
+  ];
   
   const parts: (string | JSX.Element)[] = [];
-  let lastIndex = 0;
-  let match;
   let linkIndex = 0;
+  const matches: Array<{ start: number; end: number; isMarkdown: boolean; linkText?: string; matchedText: string }> = [];
 
-  while ((match = cvPattern.exec(content)) !== null) {
+  // Collect all matches from all patterns
+  cvPatterns.forEach(({ pattern, isMarkdown }, patternIndex) => {
+    let match;
+    // Reset regex lastIndex to avoid issues
+    pattern.lastIndex = 0;
+    
+    while ((match = pattern.exec(content)) !== null) {
+      const linkText = isMarkdown ? match[1] : undefined;
+      const matchedText = match[0];
+      
+      matches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        isMarkdown,
+        linkText,
+        matchedText,
+      });
+    }
+  });
+
+  // Sort matches by start position and remove overlaps (keep first match)
+  matches.sort((a, b) => a.start - b.start);
+  const nonOverlappingMatches: typeof matches = [];
+  for (const match of matches) {
+    const overlaps = nonOverlappingMatches.some(
+      (existing) => !(match.end <= existing.start || match.start >= existing.end)
+    );
+    if (!overlaps) {
+      nonOverlappingMatches.push(match);
+    }
+  }
+
+  // Build the result with links
+  let lastIndex = 0;
+  nonOverlappingMatches.forEach((match) => {
     // Add text before the match
-    if (match.index > lastIndex) {
-      parts.push(content.slice(lastIndex, match.index));
+    if (match.start > lastIndex) {
+      parts.push(content.slice(lastIndex, match.start));
     }
 
-    // Create clickable link
+    // Create clickable link with appropriate display text
+    let displayText: string;
+    
+    if (match.isMarkdown && match.linkText) {
+      // Markdown link - use the link text the AI provided
+      displayText = match.linkText.trim() || "CV";
+    } else {
+      // For file paths or full name references, show the full name
+      displayText = "Mohamed_Kamel_CV";
+    }
+    
     parts.push(
       <a
         key={`cv-link-${linkIndex++}`}
@@ -36,13 +100,13 @@ function renderMessageWithLinks(content: string) {
         download
         className="inline-flex items-center gap-1 font-semibold text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors"
       >
-        Mohamed_Kamel_CV
+        {displayText}
         <Download size={14} className="inline" />
       </a>
     );
 
-    lastIndex = match.index + match[0].length;
-  }
+    lastIndex = match.end;
+  });
 
   // Add remaining text
   if (lastIndex < content.length) {
