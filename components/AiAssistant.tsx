@@ -275,6 +275,14 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
     if (!cleanedDomain || !allowedBareDomains.includes(lowerDomain)) {
       continue;
     }
+    const prevSlice = text.slice(Math.max(0, match.index - 3), match.index);
+    if (prevSlice.endsWith("://")) {
+      continue;
+    }
+    const prevChar = text[match.index - 1];
+    if (prevChar === "/" || prevChar === ".") {
+      continue;
+    }
     matches.push({
       start: match.index,
       end: match.index + cleanedDomain.length,
