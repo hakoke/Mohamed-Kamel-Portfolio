@@ -216,93 +216,135 @@ function formatInlineMarkdown(
 function formatBoldItalic(text: string, startKey: number): (string | JSX.Element)[] {
   const parts: (string | JSX.Element)[] = [];
   let keyIndex = startKey;
-  
-  // Process URLs first (before bold/italic to avoid conflicts)
-  // Matches http://, https://, and www. URLs
-  const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+|www\.[^\s<>"{}|\\^`\[\]]+)/gi;
-  const urlMatches: Array<{ start: number; end: number; url: string }> = [];
-  
-  let match;
-  urlRegex.lastIndex = 0;
-  while ((match = urlRegex.exec(text)) !== null) {
-    urlMatches.push({
+
+  const matches: Array<{
+    start: number;
+    end: number;
+    type: "email" | "url" | "bold" | "italic";
+    value?: string;
+    content?: string;
+    priority: number;
+  }> = [];
+
+  const emailRegex =
+    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?=[\s.,;:!?)\]}]|$)/gi;
+  let match: RegExpExecArray | null = null;
+  emailRegex.lastIndex = 0;
+  while ((match = emailRegex.exec(text)) !== null) {
+    matches.push({
       start: match.index,
       end: match.index + match[0].length,
-      url: match[0],
+      type: "email",
+      value: match[0],
+      priority: 0,
     });
   }
-  
-  // Process **bold** and *italic*
+
+  const urlRegex =
+    /(https?:\/\/[^\s<>"'()]+|www\.[^\s<>"'()]+)(?=[\s.,;:!?)\]}]|$)/gi;
+  urlRegex.lastIndex = 0;
+  while ((match = urlRegex.exec(text)) !== null) {
+    matches.push({
+      start: match.index,
+      end: match.index + match[0].length,
+      type: "url",
+      value: match[0],
+      priority: 1,
+    });
+  }
+
   const patterns = [
-    { regex: /\*\*([^*]+)\*\*/g, component: (content: string, key: number) => <strong key={key}>{content}</strong> },
-    { regex: /\*([^*]+)\*/g, component: (content: string, key: number) => <em key={key}>{content}</em> },
+    {
+      type: "bold" as const,
+      regex: /\*\*([^*]+)\*\*/g,
+      component: (content: string, key: number) => (
+        <strong key={key}>{content}</strong>
+      ),
+    },
+    {
+      type: "italic" as const,
+      regex: /\*([^*]+)\*/g,
+      component: (content: string, key: number) => (
+        <em key={key}>{content}</em>
+      ),
+    },
   ];
-  
-  const formatMatches: Array<{ start: number; end: number; content: string; type: 'bold' | 'italic' }> = [];
-  
-  patterns.forEach(({ regex }, typeIndex) => {
+
+  patterns.forEach(({ regex, type }, typeIndex) => {
     regex.lastIndex = 0;
     while ((match = regex.exec(text)) !== null) {
-      formatMatches.push({
+      matches.push({
         start: match.index,
         end: match.index + match[0].length,
+        type,
         content: match[1],
-        type: typeIndex === 0 ? 'bold' : 'italic',
+        priority: type === "bold" ? 2 : 3,
       });
     }
   });
-  
-  // Combine all matches and sort by position
-  const allMatches: Array<{ start: number; end: number; type: 'url' | 'bold' | 'italic'; content?: string; url?: string }> = [
-    ...urlMatches.map(m => ({ ...m, type: 'url' as const, url: m.url })),
-    ...formatMatches.map(m => ({ ...m, type: m.type, content: m.content })),
-  ];
-  
-  allMatches.sort((a, b) => a.start - b.start);
-  
-  // Remove overlaps (URLs take priority, then bold, then italic)
-  const nonOverlapping: typeof allMatches = [];
-  for (const match of allMatches) {
+
+  matches.sort((a, b) => {
+    if (a.start !== b.start) return a.start - b.start;
+    return a.priority - b.priority;
+  });
+
+  const nonOverlapping: typeof matches = [];
+  for (const current of matches) {
     const overlaps = nonOverlapping.some(
-      (existing) => !(match.end <= existing.start || match.start >= existing.end)
+      (existing) =>
+        !(current.end <= existing.start || current.start >= existing.end),
     );
     if (!overlaps) {
-      nonOverlapping.push(match);
+      nonOverlapping.push(current);
     }
   }
-  
-  // Build result
+
   let lastIndex = 0;
-  nonOverlapping.forEach((match) => {
-    if (match.start > lastIndex) {
-      parts.push(text.slice(lastIndex, match.start));
+  nonOverlapping.forEach((current) => {
+    if (current.start > lastIndex) {
+      parts.push(text.slice(lastIndex, current.start));
     }
-    
-    if (match.type === 'url') {
-      // Make URL clickable and blue
-      const url = match.url!.startsWith('www.') ? `https://${match.url}` : match.url!;
+
+    if (current.type === "email" && current.value) {
       parts.push(
         <a
-          key={`url-${keyIndex++}`}
-          href={url}
+          key={`email-${keyIndex++}`}
+          href={`mailto:${current.value}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors"
         >
-          {match.url}
-        </a>
+          {current.value}
+        </a>,
       );
-    } else {
-      const Component = patterns[match.type === 'bold' ? 0 : 1].component;
-      parts.push(Component(match.content!, keyIndex++));
+    } else if (current.type === "url" && current.value) {
+      const href = current.value.startsWith("www.")
+        ? `https://${current.value}`
+        : current.value;
+      parts.push(
+        <a
+          key={`url-${keyIndex++}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 underline underline-offset-2 hover:text-blue-300 transition-colors"
+        >
+          {current.value}
+        </a>,
+      );
+    } else if (current.content) {
+      const Component =
+        current.type === "bold" ? patterns[0].component : patterns[1].component;
+      parts.push(Component(current.content, keyIndex++));
     }
-    lastIndex = match.end;
+
+    lastIndex = current.end;
   });
-  
+
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
-  
+
   return parts.length > 0 ? parts : [text];
 }
 
