@@ -241,14 +241,22 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
   }
 
   const urlRegex =
-    /(https?:\/\/[^\s<>"'().,;:!?\])}]+|www\.[^\s<>"'().,;:!?\])}]+)(?=[\s.,;:!?)\]}]|$)/gi;
+    /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
   urlRegex.lastIndex = 0;
   while ((match = urlRegex.exec(text)) !== null) {
+    const rawUrl = match[0];
+    const cleanedUrl = rawUrl.replace(/[.,;:!?)\]}]+$/, "");
+    const trimmedLength = rawUrl.length - cleanedUrl.length;
+    const endIndex = match.index + cleanedUrl.length;
+    if (!cleanedUrl) {
+      continue;
+    }
+
     matches.push({
       start: match.index,
-      end: match.index + match[0].length,
+      end: endIndex,
       type: "url",
-      value: match[0],
+      value: cleanedUrl,
       priority: 1,
     });
   }
