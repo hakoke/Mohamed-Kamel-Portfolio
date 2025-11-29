@@ -263,6 +263,7 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
 
   const bareDomainRegex =
     /(?<!@)\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s<>"']*)?/gi;
+  const allowedBareDomains = ["bespoke-ae.com"];
   bareDomainRegex.lastIndex = 0;
   while ((match = bareDomainRegex.exec(text)) !== null) {
     const rawDomain = match[0];
@@ -270,14 +271,15 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
       continue;
     }
     const cleanedDomain = rawDomain.replace(/[.,;:!?)\]}]+$/, "");
-    if (!cleanedDomain) {
+    const lowerDomain = cleanedDomain.toLowerCase();
+    if (!cleanedDomain || !allowedBareDomains.includes(lowerDomain)) {
       continue;
     }
     matches.push({
       start: match.index,
       end: match.index + cleanedDomain.length,
       type: "url",
-      value: `https://${cleanedDomain}`,
+      value: `https://${lowerDomain}`,
       priority: 1,
     });
   }
