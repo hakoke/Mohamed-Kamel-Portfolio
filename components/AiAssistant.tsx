@@ -241,7 +241,7 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
   }
 
   const urlRegex =
-    /(https?:\/\/[^\s<>"'()]+|www\.[^\s<>"'()]+)(?=[\s.,;:!?)\]}]|$)/gi;
+    /(https?:\/\/[^\s<>"'().,;:!?\])}]+|www\.[^\s<>"'().,;:!?\])}]+)(?=[\s.,;:!?)\]}]|$)/gi;
   urlRegex.lastIndex = 0;
   while ((match = urlRegex.exec(text)) !== null) {
     matches.push({
