@@ -141,20 +141,7 @@ export default function ProjectDetail({ project }: Props) {
       }
     }
 
-    if (type === 'code' && expandedCode && project.codeSnippets.length > 1) {
-      if (isLeftSwipe) {
-        // Swipe left - next snippet
-        setActiveSnippet((prev) =>
-          prev === project.codeSnippets.length - 1 ? 0 : prev + 1
-        );
-      }
-      if (isRightSwipe) {
-        // Swipe right - previous snippet
-        setActiveSnippet((prev) =>
-          prev === 0 ? project.codeSnippets.length - 1 : prev - 1
-        );
-      }
-    }
+    // Code snippets don't have swipe gestures
 
     // Reset touch state
     setTouchStart(null);
@@ -820,9 +807,6 @@ export default function ProjectDetail({ project }: Props) {
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 overflow-hidden"
               onClick={() => setExpandedCode(false)}
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={() => onTouchEnd('code')}
             >
               <button
                 type="button"
@@ -833,18 +817,19 @@ export default function ProjectDetail({ project }: Props) {
                 <X size={24} />
               </button>
               
-              <div 
-                className="relative max-h-[90vh] max-w-5xl w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-white/10 p-6 overflow-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={project.codeSnippets[activeSnippet].title}
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -40 }}
-                    transition={{ duration: 0.4 }}
-                  >
+              <div className="relative max-h-[90vh] max-w-5xl w-full pointer-events-none">
+                <div
+                  className="relative max-h-[90vh] max-w-5xl w-full bg-gradient-to-br from-gray-900 to-black rounded-2xl border border-white/10 p-6 overflow-auto pointer-events-auto"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={project.codeSnippets[activeSnippet].title}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -40 }}
+                      transition={{ duration: 0.4 }}
+                    >
                     <div className="flex items-center justify-between gap-4 mb-4">
                       <div>
                         <p className="text-sm uppercase tracking-[0.3em] text-gray-400">
@@ -867,8 +852,9 @@ export default function ProjectDetail({ project }: Props) {
                         {project.codeSnippets[activeSnippet].code.trim()}
                       </code>
                     </pre>
-                  </motion.div>
-                </AnimatePresence>
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
               </div>
 
               {project.codeSnippets.length > 1 && (
