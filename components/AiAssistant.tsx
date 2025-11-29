@@ -261,6 +261,27 @@ function formatBoldItalic(text: string, startKey: number): (string | JSX.Element
     });
   }
 
+  const bareDomainRegex =
+    /(?<!@)\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:\/[^\s<>"']*)?/gi;
+  bareDomainRegex.lastIndex = 0;
+  while ((match = bareDomainRegex.exec(text)) !== null) {
+    const rawDomain = match[0];
+    if (/^(https?:\/\/|www\.)/i.test(rawDomain)) {
+      continue;
+    }
+    const cleanedDomain = rawDomain.replace(/[.,;:!?)\]}]+$/, "");
+    if (!cleanedDomain) {
+      continue;
+    }
+    matches.push({
+      start: match.index,
+      end: match.index + cleanedDomain.length,
+      type: "url",
+      value: `https://${cleanedDomain}`,
+      priority: 1,
+    });
+  }
+
   const patterns = [
     {
       type: "bold" as const,
