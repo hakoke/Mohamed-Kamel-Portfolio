@@ -386,7 +386,7 @@ if self.enable_tracking:
     ],
     results:
       "Resume ingestion now takes minutes, not hours. Clients can talk through complex requirements like a real PM, while AI suggests services, talent matches, and pricing in one flow. The platform is live at bespoke-ae.com with Railway hosting behind Cloudflare, the GoDaddy-managed domain, and indexing handled via Google Search Console.",
-    demoVideo: null,
+    demoVideo: "/Bespoke_Demo.mp4",
     images: [
       {
         url: "/bespoke/homepage.jpg",
