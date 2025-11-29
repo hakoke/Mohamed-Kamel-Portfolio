@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Bot,
@@ -12,57 +12,51 @@ import {
   Zap,
 } from "lucide-react";
 
-// Helper function to convert CV references to clickable links
-// AI-driven: Only matches when AI explicitly references the CV file (markdown links or file paths)
-// This is dynamic - the AI controls when to reference CV by using markdown format
+// Helper function to render message with markdown formatting and CV links
+// Handles: line breaks, bullet points, bold, italic, and CV links
 function renderMessageWithLinks(content: string) {
-  // Only match explicit CV file references (AI-driven, not hardcoded word matching):
-  // - Markdown links: [text](/Mohamed_Kamel_CV.pdf) - AI uses this format when it wants to reference CV
-  // - Full file paths: /Mohamed_Kamel_CV.pdf or Mohamed_Kamel_CV.pdf - explicit file references
-  // - Full name with file context: Mohamed_Kamel_CV when clearly a file reference
+  // First, handle CV links by replacing them with placeholders
+  const cvPlaceholders: Array<{ placeholder: string; element: JSX.Element }> = [];
+  let linkIndex = 0;
+  
   const cvPatterns = [
-    // Markdown links: [text](/Mohamed_Kamel_CV.pdf) - AI uses this when it wants to reference CV
+    // Markdown links: [text](/Mohamed_Kamel_CV.pdf)
     {
       pattern: /\[([^\]]*)\]\(\/?Mohamed[_\s\\]*Kamel[_\s\\]*CV[_\s\\]*\.pdf\)/gi,
       isMarkdown: true,
     },
-    // Full file path references: /Mohamed_Kamel_CV.pdf or Mohamed_Kamel_CV.pdf (explicit file reference)
+    // Full file path references
     {
       pattern: /\/?Mohamed[_\s\\]*Kamel[_\s\\]*CV[_\s\\]*\.pdf/gi,
       isMarkdown: false,
     },
-    // Full name when it's clearly a file/document reference (followed by file-related context)
+    // Full name with file context
     {
       pattern: /Mohamed[_\s\\]*Kamel[_\s\\]*CV(?=\s+(?:at|here|below|above|file|PDF|pdf|downloadable|available|link|download|document|is\s+available|can\s+be|will\s+be)|$)/gi,
       isMarkdown: false,
     },
   ];
-  
-  const parts: (string | JSX.Element)[] = [];
-  let linkIndex = 0;
+
+  let processedContent = content;
   const matches: Array<{ start: number; end: number; isMarkdown: boolean; linkText?: string; matchedText: string }> = [];
 
-  // Collect all matches from all patterns
-  cvPatterns.forEach(({ pattern, isMarkdown }, patternIndex) => {
-    let match;
-    // Reset regex lastIndex to avoid issues
+  // Collect all CV matches
+  cvPatterns.forEach(({ pattern, isMarkdown }) => {
     pattern.lastIndex = 0;
-    
+    let match;
     while ((match = pattern.exec(content)) !== null) {
       const linkText = isMarkdown ? match[1] : undefined;
-      const matchedText = match[0];
-      
       matches.push({
         start: match.index,
         end: match.index + match[0].length,
         isMarkdown,
         linkText,
-        matchedText,
+        matchedText: match[0],
       });
     }
   });
 
-  // Sort matches by start position and remove overlaps (keep first match)
+  // Sort and remove overlaps
   matches.sort((a, b) => a.start - b.start);
   const nonOverlappingMatches: typeof matches = [];
   for (const match of matches) {
@@ -74,46 +68,205 @@ function renderMessageWithLinks(content: string) {
     }
   }
 
-  // Build the result with links
-  let lastIndex = 0;
-  nonOverlappingMatches.forEach((match) => {
-    // Add text before the match
-    if (match.start > lastIndex) {
-      parts.push(content.slice(lastIndex, match.start));
-    }
-
-    // Create clickable link with appropriate display text
-    let displayText: string;
+  // Replace CV links with placeholders (process from end to start to preserve indices)
+  for (let i = nonOverlappingMatches.length - 1; i >= 0; i--) {
+    const match = nonOverlappingMatches[i];
+    const placeholder = `__CV_LINK_${linkIndex}__`;
+    const displayText = match.isMarkdown && match.linkText 
+      ? match.linkText.trim() || "CV"
+      : "Mohamed_Kamel_CV";
     
-    if (match.isMarkdown && match.linkText) {
-      // Markdown link - use the link text the AI provided
-      displayText = match.linkText.trim() || "CV";
-    } else {
-      // For file paths or full name references, show the full name
-      displayText = "Mohamed_Kamel_CV";
-    }
+    cvPlaceholders.push({
+      placeholder,
+      element: (
+        <a
+          key={`cv-link-${linkIndex}`}
+          href="/Mohamed_Kamel_CV.pdf"
+          download
+          className="inline-flex items-center gap-1 font-semibold text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors"
+        >
+          {displayText}
+          <Download size={14} className="inline" />
+        </a>
+      ),
+    });
     
-    parts.push(
-      <a
-        key={`cv-link-${linkIndex++}`}
-        href="/Mohamed_Kamel_CV.pdf"
-        download
-        className="inline-flex items-center gap-1 font-semibold text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors"
-      >
-        {displayText}
-        <Download size={14} className="inline" />
-      </a>
-    );
-
-    lastIndex = match.end;
-  });
-
-  // Add remaining text
-  if (lastIndex < content.length) {
-    parts.push(content.slice(lastIndex));
+    processedContent = 
+      processedContent.slice(0, match.start) + 
+      placeholder + 
+      processedContent.slice(match.end);
+    linkIndex++;
   }
 
-  return parts.length > 0 ? <>{parts}</> : content;
+  // Now process markdown formatting
+  return renderMarkdown(processedContent, cvPlaceholders);
+}
+
+// Helper function to render markdown formatting
+function renderMarkdown(
+  content: string,
+  cvPlaceholders: Array<{ placeholder: string; element: JSX.Element }>
+): JSX.Element {
+  const parts: (string | JSX.Element)[] = [];
+  
+  // Split by double newlines for paragraphs
+  const paragraphs = content.split(/\n\n+/);
+  
+  paragraphs.forEach((paragraph, paraIndex) => {
+    if (paraIndex > 0) {
+      parts.push(<br key={`para-break-${paraIndex}`} />);
+      parts.push(<br key={`para-break-${paraIndex}-2`} />);
+    }
+    
+    // Check if this is a bullet list
+    const lines = paragraph.split('\n');
+    const isBulletList = lines.some(line => /^[\s]*[-*]\s+/.test(line.trim()));
+    
+    if (isBulletList) {
+      // Process as bullet list
+      lines.forEach((line, lineIndex) => {
+        const bulletMatch = line.match(/^[\s]*[-*]\s+(.+)$/);
+        if (bulletMatch) {
+          const bulletContent = bulletMatch[1];
+          const formatted = formatInlineMarkdown(bulletContent, cvPlaceholders);
+          parts.push(
+            <div key={`bullet-${paraIndex}-${lineIndex}`} className="flex items-start gap-2">
+              <span className="text-cyan-400 mt-1">•</span>
+              <span>{formatted}</span>
+            </div>
+          );
+        } else if (line.trim()) {
+          // Regular line within paragraph
+          const formatted = formatInlineMarkdown(line, cvPlaceholders);
+          parts.push(<div key={`line-${paraIndex}-${lineIndex}`}>{formatted}</div>);
+        }
+      });
+    } else {
+      // Regular paragraph - process inline markdown
+      const formatted = formatInlineMarkdown(paragraph, cvPlaceholders);
+      parts.push(<div key={`para-${paraIndex}`}>{formatted}</div>);
+    }
+  });
+  
+  return <>{parts}</>;
+}
+
+// Helper function to format inline markdown (bold, italic, CV placeholders)
+function formatInlineMarkdown(
+  text: string,
+  cvPlaceholders: Array<{ placeholder: string; element: JSX.Element }>
+): (string | JSX.Element)[] {
+  // Find all placeholder positions
+  const placeholderPositions: Array<{ start: number; end: number; element: JSX.Element }> = [];
+  cvPlaceholders.forEach(({ placeholder, element }) => {
+    let searchIndex = 0;
+    while (true) {
+      const index = text.indexOf(placeholder, searchIndex);
+      if (index === -1) break;
+      placeholderPositions.push({
+        start: index,
+        end: index + placeholder.length,
+        element,
+      });
+      searchIndex = index + 1;
+    }
+  });
+  
+  // Sort by position
+  placeholderPositions.sort((a, b) => a.start - b.start);
+  
+  // Remove overlaps (keep first)
+  const nonOverlapping: typeof placeholderPositions = [];
+  for (const pos of placeholderPositions) {
+    const overlaps = nonOverlapping.some(
+      (existing) => !(pos.end <= existing.start || pos.start >= existing.end)
+    );
+    if (!overlaps) {
+      nonOverlapping.push(pos);
+    }
+  }
+  
+  // Build result by processing text segments and placeholders
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
+  let keyIndex = 0;
+  
+  nonOverlapping.forEach((pos) => {
+    // Add text before placeholder (with formatting)
+    if (pos.start > lastIndex) {
+      const before = text.slice(lastIndex, pos.start);
+      parts.push(...formatBoldItalic(before, keyIndex));
+      keyIndex += before.length;
+    }
+    // Add placeholder element
+    parts.push(React.cloneElement(pos.element, { key: `cv-${keyIndex++}` }));
+    lastIndex = pos.end;
+  });
+  
+  // Add remaining text (with formatting)
+  if (lastIndex < text.length) {
+    const remaining = text.slice(lastIndex);
+    parts.push(...formatBoldItalic(remaining, keyIndex));
+  }
+  
+  return parts.length > 0 ? parts : formatBoldItalic(text, 0);
+}
+
+// Helper function to format bold and italic
+function formatBoldItalic(text: string, startKey: number): (string | JSX.Element)[] {
+  const parts: (string | JSX.Element)[] = [];
+  let remaining = text;
+  let keyIndex = startKey;
+  
+  // Process **bold** and *italic* (in that order to avoid conflicts)
+  const patterns = [
+    { regex: /\*\*([^*]+)\*\*/g, component: (content: string, key: number) => <strong key={key}>{content}</strong> },
+    { regex: /\*([^*]+)\*/g, component: (content: string, key: number) => <em key={key}>{content}</em> },
+  ];
+  
+  const matches: Array<{ start: number; end: number; content: string; type: 'bold' | 'italic' }> = [];
+  
+  patterns.forEach(({ regex }, typeIndex) => {
+    regex.lastIndex = 0;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      matches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        content: match[1],
+        type: typeIndex === 0 ? 'bold' : 'italic',
+      });
+    }
+  });
+  
+  // Sort by position and remove overlaps (bold takes priority)
+  matches.sort((a, b) => a.start - b.start);
+  const nonOverlapping: typeof matches = [];
+  for (const match of matches) {
+    const overlaps = nonOverlapping.some(
+      (existing) => !(match.end <= existing.start || match.start >= existing.end)
+    );
+    if (!overlaps) {
+      nonOverlapping.push(match);
+    }
+  }
+  
+  // Build result
+  let lastIndex = 0;
+  nonOverlapping.forEach((match) => {
+    if (match.start > lastIndex) {
+      parts.push(text.slice(lastIndex, match.start));
+    }
+    const Component = patterns[match.type === 'bold' ? 0 : 1].component;
+    parts.push(Component(match.content, keyIndex++));
+    lastIndex = match.end;
+  });
+  
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : [text];
 }
 
 type ChatMessage = {
