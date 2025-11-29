@@ -125,9 +125,23 @@ export default function Projects() {
                     <p className="text-xs uppercase tracking-[0.3em] text-gray-400">
                       {project.tagline}
                     </p>
-                    <h3 className="mt-1 text-2xl font-semibold text-white">
-                      {project.title}
-                    </h3>
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <h3 className="text-2xl font-semibold text-white">
+                        {project.title}
+                      </h3>
+                      {project.slug === "bespoke" && project.links.website && (
+                        <a
+                          href={project.links.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 rounded-full border border-white/15 px-2.5 py-0.5 text-xs font-semibold text-cyan-200 transition hover:border-white/40 hover:text-white"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          Visit site
+                          <ArrowUpRight size={12} />
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
                 {project.links.github ? (
@@ -166,19 +180,6 @@ export default function Projects() {
               <p className="flex-1 text-left text-gray-300">
                 {project.summary}
               </p>
-
-              {project.links.website && (
-                <a
-                  href={project.links.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex w-fit items-center gap-2 rounded-full border border-cyan-400/30 px-3 py-1 text-xs font-semibold text-cyan-200 transition hover:border-cyan-200 hover:text-white"
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  Visit site
-                  <ArrowUpRight size={12} />
-                </a>
-              )}
 
               <div className="flex flex-wrap gap-2 text-left">
                 {project.stack.slice(0, 4).map((tech) => (

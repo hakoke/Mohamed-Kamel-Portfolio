@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Mail, Github, Send } from "lucide-react";
+import { Mail, Github, Send, Linkedin } from "lucide-react";
 
 export default function Contact() {
   const ref = useRef(null);
@@ -80,9 +80,11 @@ export default function Contact() {
           <div className="grid md:grid-cols-2 gap-12">
             <div>
                 <p className="text-lg text-gray-400 mb-8">
-                  I&apos;m always open to new opportunities and collaborations. Feel free
-                  to reach out if you want to work together or just chat about tech!
-              </p>
+                  I&apos;m always open to new opportunities and collaborations. I wrap up my
+                  Bachelor of Computer Science (Cybersecurity) on December 20, 2025, so now
+                  is the perfect time to discuss anything long-term. Feel free to reach out
+                  if you want to work together or just chat about tech!
+                </p>
 
               <div className="space-y-4">
                 <a
@@ -93,6 +95,15 @@ export default function Contact() {
                 >
                   <Github size={24} />
                   <span>github.com/hakoke</span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/mohamed-kamel-3a732b297"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors"
+                >
+                  <Linkedin size={24} />
+                  <span>linkedin.com/in/mohamed-kamel-3a732b297</span>
                 </a>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail size={24} />

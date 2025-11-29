@@ -506,11 +506,11 @@ export default function AiAssistant() {
           <h2 className="mt-4 text-4xl font-semibold text-white">
             Ask anything about my builds, stack, or thought process.
           </h2>
-          <p className="mt-4 text-gray-200">
-            Gemini 2.0 Flash has real context on my projects,
-            diagrams, CV, and how I solve problems. Think of it as a teammate that knows my work.
-            you can ask about SafeOps, Bespoke, ServerMate, or how I approach new AI challenges.
-          </p>
+              <p className="mt-4 text-gray-200">
+                Gemini 2.0 Flash has real context on Mohamed&apos;s projects, diagrams, CV, and how he solves problems.
+                I partner with him as his AI wingman, so you get smart answers without him dropping what he&apos;s doing.
+                You can ask about SafeOps, Bespoke, ServerMate, or how he approaches new AI challenges.
+              </p>
 
           <div className="mt-6 grid gap-3 md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
